@@ -36,6 +36,7 @@ solarmainframe/
 ml/splits/
 *.csv
 !tests/*.csv
+!tests/**/*.csv
 
 # Generated reports / analysis outputs
 vae_analysis_report.csv

@@ -1,0 +1,1359 @@
+{
+  "title": "CYPHER Manual Crosscheck Dataset Manifest",
+  "description": "Held-out test split validation fixture containing 78 canonical XGBoost features, expected labels, and offline baseline predictions.",
+  "generated_at": "2026-10-13T12:24:00Z",
+  "source_dataset": "ml/splits_leakage_resistant/test.csv",
+  "sampling_method": "Stratified deterministic random sampling (random_state=42) from duplicate-resistant held-out test split",
+  "random_state": 42,
+  "total_rows": 49,
+  "total_columns": 80,
+  "feature_count": 78,
+  "feature_column_order": [
+    "Destination Port",
+    "Flow Duration",
+    "Total Fwd Packets",
+    "Total Backward Packets",
+    "Total Length of Fwd Packets",
+    "Total Length of Bwd Packets",
+    "Fwd Packet Length Max",
+    "Fwd Packet Length Min",
+    "Fwd Packet Length Mean",
+    "Fwd Packet Length Std",
+    "Bwd Packet Length Max",
+    "Bwd Packet Length Min",
+    "Bwd Packet Length Mean",
+    "Bwd Packet Length Std",
+    "Flow Bytes/s",
+    "Flow Packets/s",
+    "Flow IAT Mean",
+    "Flow IAT Std",
+    "Flow IAT Max",
+    "Flow IAT Min",
+    "Fwd IAT Total",
+    "Fwd IAT Mean",
+    "Fwd IAT Std",
+    "Fwd IAT Max",
+    "Fwd IAT Min",
+    "Bwd IAT Total",
+    "Bwd IAT Mean",
+    "Bwd IAT Std",
+    "Bwd IAT Max",
+    "Bwd IAT Min",
+    "Fwd PSH Flags",
+    "Bwd PSH Flags",
+    "Fwd URG Flags",
+    "Bwd URG Flags",
+    "Fwd Header Length",
+    "Bwd Header Length",
+    "Fwd Packets/s",
+    "Bwd Packets/s",
+    "Min Packet Length",
+    "Max Packet Length",
+    "Packet Length Mean",
+    "Packet Length Std",
+    "Packet Length Variance",
+    "FIN Flag Count",
+    "SYN Flag Count",
+    "RST Flag Count",
+    "PSH Flag Count",
+    "ACK Flag Count",
+    "URG Flag Count",
+    "CWE Flag Count",
+    "ECE Flag Count",
+    "Down/Up Ratio",
+    "Average Packet Size",
+    "Avg Fwd Segment Size",
+    "Avg Bwd Segment Size",
+    "Fwd Header Length.1",
+    "Fwd Avg Bytes/Bulk",
+    "Fwd Avg Packets/Bulk",
+    "Fwd Avg Bulk Rate",
+    "Bwd Avg Bytes/Bulk",
+    "Bwd Avg Packets/Bulk",
+    "Bwd Avg Bulk Rate",
+    "Subflow Fwd Packets",
+    "Subflow Fwd Bytes",
+    "Subflow Bwd Packets",
+    "Subflow Bwd Bytes",
+    "Init_Win_bytes_forward",
+    "Init_Win_bytes_backward",
+    "act_data_pkt_fwd",
+    "min_seg_size_forward",
+    "Active Mean",
+    "Active Std",
+    "Active Max",
+    "Active Min",
+    "Idle Mean",
+    "Idle Std",
+    "Idle Max",
+    "Idle Min"
+  ],
+  "metadata_columns": [
+    "expected_label",
+    "expected_binary_label"
+  ],
+  "class_counts": {
+    "BENIGN": 5,
+    "Bot": 4,
+    "DDoS": 4,
+    "DoS GoldenEye": 4,
+    "DoS Hulk": 4,
+    "DoS Slowhttptest": 4,
+    "DoS slowloris": 4,
+    "FTP-Patator": 4,
+    "PortScan": 4,
+    "SSH-Patator": 4,
+    "Web Attack Brute Force": 4,
+    "Web Attack XSS": 4
+  },
+  "available_classes_in_source_split": {
+    "BENIGN": 3772,
+    "PortScan": 3759,
+    "DDoS": 3750,
+    "DoS Hulk": 3222,
+    "DoS GoldenEye": 1544,
+    "FTP-Patator": 1002,
+    "SSH-Patator": 947,
+    "DoS slowloris": 837,
+    "DoS Slowhttptest": 788,
+    "Bot": 296,
+    "Web Attack Brute Force": 224,
+    "Web Attack XSS": 98
+  },
+  "class_shortages": [],
+  "sha256": "d697a9441cc4eae37ce6d4596b65ee54808400150fc9125a73ebade507e14bad",
+  "offline_evaluation": {
+    "total_samples": 49,
+    "exact_class_agreement_count": 46,
+    "exact_class_agreement_rate": 0.9388,
+    "binary_detection_agreement_count": 48,
+    "binary_detection_agreement_rate": 0.9796
+  },
+  "rows": [
+    {
+      "fixture_row_index": 0,
+      "source_test_row_index": 1618,
+      "source_file": "Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv",
+      "expected_label": "BENIGN",
+      "expected_binary_label": "BENIGN",
+      "offline_prediction": {
+        "attack_type": "Attack Type Unclassified",
+        "attack_confidence": null,
+        "classifier_probability": null,
+        "classification_status": "Evaluated",
+        "is_anomaly": true,
+        "score": 3142.277587890625,
+        "threshold": 38.50959014892578,
+        "anomaly_confidence": 0.999,
+        "alert_type": "anomaly_candidate",
+        "verdict": "Anomalous \u2014 Attack Type Unclassified",
+        "verdict_confidence": 0.999,
+        "detection_source": "vae_anomaly"
+      },
+      "eval_summary": {
+        "exact_class_match": false,
+        "binary_detection_match": false
+      }
+    },
+    {
+      "fixture_row_index": 1,
+      "source_test_row_index": 11003,
+      "source_file": "Wednesday-workingHours.pcap_ISCX.csv",
+      "expected_label": "BENIGN",
+      "expected_binary_label": "BENIGN",
+      "offline_prediction": {
+        "attack_type": "Normal Traffic",
+        "attack_confidence": null,
+        "classifier_probability": null,
+        "classification_status": "Evaluated",
+        "is_anomaly": false,
+        "score": 11.759228706359863,
+        "threshold": 38.50959014892578,
+        "anomaly_confidence": 0.8595,
+        "alert_type": "normal_traffic",
+        "verdict": "Normal Traffic",
+        "verdict_confidence": 0.8595,
+        "detection_source": "clear_normal"
+      },
+      "eval_summary": {
+        "exact_class_match": true,
+        "binary_detection_match": true
+      }
+    },
+    {
+      "fixture_row_index": 2,
+      "source_test_row_index": 19578,
+      "source_file": "Monday-WorkingHours.pcap_ISCX.csv",
+      "expected_label": "BENIGN",
+      "expected_binary_label": "BENIGN",
+      "offline_prediction": {
+        "attack_type": "Normal Traffic",
+        "attack_confidence": null,
+        "classifier_probability": null,
+        "classification_status": "Evaluated",
+        "is_anomaly": false,
+        "score": 0.5900429487228394,
+        "threshold": 38.50959014892578,
+        "anomaly_confidence": 0.9836,
+        "alert_type": "normal_traffic",
+        "verdict": "Normal Traffic",
+        "verdict_confidence": 0.9836,
+        "detection_source": "clear_normal"
+      },
+      "eval_summary": {
+        "exact_class_match": true,
+        "binary_detection_match": true
+      }
+    },
+    {
+      "fixture_row_index": 3,
+      "source_test_row_index": 17250,
+      "source_file": "Thursday-WorkingHours-Morning-WebAttacks.pcap_ISCX.csv",
+      "expected_label": "BENIGN",
+      "expected_binary_label": "BENIGN",
+      "offline_prediction": {
+        "attack_type": "Normal Traffic",
+        "attack_confidence": null,
+        "classifier_probability": null,
+        "classification_status": "Evaluated",
+        "is_anomaly": false,
+        "score": 5.547560214996338,
+        "threshold": 38.50959014892578,
+        "anomaly_confidence": 0.9293,
+        "alert_type": "normal_traffic",
+        "verdict": "Normal Traffic",
+        "verdict_confidence": 0.9293,
+        "detection_source": "clear_normal"
+      },
+      "eval_summary": {
+        "exact_class_match": true,
+        "binary_detection_match": true
+      }
+    },
+    {
+      "fixture_row_index": 4,
+      "source_test_row_index": 9108,
+      "source_file": "Wednesday-workingHours.pcap_ISCX.csv",
+      "expected_label": "BENIGN",
+      "expected_binary_label": "BENIGN",
+      "offline_prediction": {
+        "attack_type": "Normal Traffic",
+        "attack_confidence": null,
+        "classifier_probability": null,
+        "classification_status": "Evaluated",
+        "is_anomaly": false,
+        "score": 7.698365688323975,
+        "threshold": 38.50959014892578,
+        "anomaly_confidence": 0.9054,
+        "alert_type": "normal_traffic",
+        "verdict": "Normal Traffic",
+        "verdict_confidence": 0.9054,
+        "detection_source": "clear_normal"
+      },
+      "eval_summary": {
+        "exact_class_match": true,
+        "binary_detection_match": true
+      }
+    },
+    {
+      "fixture_row_index": 5,
+      "source_test_row_index": 19073,
+      "source_file": "Friday-WorkingHours-Morning.pcap_ISCX.csv",
+      "expected_label": "Bot",
+      "expected_binary_label": "ATTACK",
+      "offline_prediction": {
+        "attack_type": "Bot",
+        "attack_confidence": 0.999355,
+        "classifier_probability": 0.999355,
+        "classification_status": "Evaluated",
+        "is_anomaly": true,
+        "score": 0.25143417716026306,
+        "threshold": 38.50959014892578,
+        "anomaly_confidence": 0.9873,
+        "alert_type": "known_attack",
+        "verdict": "Anomalous \u2014 Bot",
+        "verdict_confidence": 0.999355,
+        "detection_source": "classifier_attack"
+      },
+      "eval_summary": {
+        "exact_class_match": true,
+        "binary_detection_match": true
+      }
+    },
+    {
+      "fixture_row_index": 6,
+      "source_test_row_index": 10632,
+      "source_file": "Friday-WorkingHours-Morning.pcap_ISCX.csv",
+      "expected_label": "Bot",
+      "expected_binary_label": "ATTACK",
+      "offline_prediction": {
+        "attack_type": "Bot",
+        "attack_confidence": 0.998391,
+        "classifier_probability": 0.998391,
+        "classification_status": "Evaluated",
+        "is_anomaly": true,
+        "score": 1090.5877685546875,
+        "threshold": 38.50959014892578,
+        "anomaly_confidence": 0.999,
+        "alert_type": "dual_signal",
+        "verdict": "Anomalous \u2014 Bot",
+        "verdict_confidence": 0.998391,
+        "detection_source": "dual_confirmed"
+      },
+      "eval_summary": {
+        "exact_class_match": true,
+        "binary_detection_match": true
+      }
+    },
+    {
+      "fixture_row_index": 7,
+      "source_test_row_index": 5777,
+      "source_file": "Friday-WorkingHours-Morning.pcap_ISCX.csv",
+      "expected_label": "Bot",
+      "expected_binary_label": "ATTACK",
+      "offline_prediction": {
+        "attack_type": "Bot",
+        "attack_confidence": 0.99996,
+        "classifier_probability": 0.99996,
+        "classification_status": "Evaluated",
+        "is_anomaly": true,
+        "score": 0.5712127089500427,
+        "threshold": 38.50959014892578,
+        "anomaly_confidence": 0.9838,
+        "alert_type": "known_attack",
+        "verdict": "Anomalous \u2014 Bot",
+        "verdict_confidence": 0.99996,
+        "detection_source": "classifier_attack"
+      },
+      "eval_summary": {
+        "exact_class_match": true,
+        "binary_detection_match": true
+      }
+    },
+    {
+      "fixture_row_index": 8,
+      "source_test_row_index": 5650,
+      "source_file": "Friday-WorkingHours-Morning.pcap_ISCX.csv",
+      "expected_label": "Bot",
+      "expected_binary_label": "ATTACK",
+      "offline_prediction": {
+        "attack_type": "Bot",
+        "attack_confidence": 0.999941,
+        "classifier_probability": 0.999941,
+        "classification_status": "Evaluated",
+        "is_anomaly": true,
+        "score": 0.5913600921630859,
+        "threshold": 38.50959014892578,
+        "anomaly_confidence": 0.9836,
+        "alert_type": "known_attack",
+        "verdict": "Anomalous \u2014 Bot",
+        "verdict_confidence": 0.999941,
+        "detection_source": "classifier_attack"
+      },
+      "eval_summary": {
+        "exact_class_match": true,
+        "binary_detection_match": true
+      }
+    },
+    {
+      "fixture_row_index": 9,
+      "source_test_row_index": 11618,
+      "source_file": "Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv",
+      "expected_label": "DDoS",
+      "expected_binary_label": "ATTACK",
+      "offline_prediction": {
+        "attack_type": "DDoS",
+        "attack_confidence": 0.999994,
+        "classifier_probability": 0.999994,
+        "classification_status": "Evaluated",
+        "is_anomaly": true,
+        "score": 0.21548773348331451,
+        "threshold": 38.50959014892578,
+        "anomaly_confidence": 0.9877,
+        "alert_type": "known_attack",
+        "verdict": "Anomalous \u2014 DDoS",
+        "verdict_confidence": 0.999994,
+        "detection_source": "classifier_attack"
+      },
+      "eval_summary": {
+        "exact_class_match": true,
+        "binary_detection_match": true
+      }
+    },
+    {
+      "fixture_row_index": 10,
+      "source_test_row_index": 5720,
+      "source_file": "Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv",
+      "expected_label": "DDoS",
+      "expected_binary_label": "ATTACK",
+      "offline_prediction": {
+        "attack_type": "DDoS",
+        "attack_confidence": 0.99998,
+        "classifier_probability": 0.99998,
+        "classification_status": "Evaluated",
+        "is_anomaly": true,
+        "score": 1959.7828369140625,
+        "threshold": 38.50959014892578,
+        "anomaly_confidence": 0.999,
+        "alert_type": "dual_signal",
+        "verdict": "Anomalous \u2014 DDoS",
+        "verdict_confidence": 0.99998,
+        "detection_source": "dual_confirmed"
+      },
+      "eval_summary": {
+        "exact_class_match": true,
+        "binary_detection_match": true
+      }
+    },
+    {
+      "fixture_row_index": 11,
+      "source_test_row_index": 17723,
+      "source_file": "Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv",
+      "expected_label": "DDoS",
+      "expected_binary_label": "ATTACK",
+      "offline_prediction": {
+        "attack_type": "DDoS",
+        "attack_confidence": 0.999993,
+        "classifier_probability": 0.999993,
+        "classification_status": "Evaluated",
+        "is_anomaly": true,
+        "score": 0.21241144835948944,
+        "threshold": 38.50959014892578,
+        "anomaly_confidence": 0.9877,
+        "alert_type": "known_attack",
+        "verdict": "Anomalous \u2014 DDoS",
+        "verdict_confidence": 0.999993,
+        "detection_source": "classifier_attack"
+      },
+      "eval_summary": {
+        "exact_class_match": true,
+        "binary_detection_match": true
+      }
+    },
+    {
+      "fixture_row_index": 12,
+      "source_test_row_index": 2342,
+      "source_file": "Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv",
+      "expected_label": "DDoS",
+      "expected_binary_label": "ATTACK",
+      "offline_prediction": {
+        "attack_type": "DDoS",
+        "attack_confidence": 0.999992,
+        "classifier_probability": 0.999992,
+        "classification_status": "Evaluated",
+        "is_anomaly": true,
+        "score": 0.21131548285484314,
+        "threshold": 38.50959014892578,
+        "anomaly_confidence": 0.9877,
+        "alert_type": "known_attack",
+        "verdict": "Anomalous \u2014 DDoS",
+        "verdict_confidence": 0.999992,
+        "detection_source": "classifier_attack"
+      },
+      "eval_summary": {
+        "exact_class_match": true,
+        "binary_detection_match": true
+      }
+    },
+    {
+      "fixture_row_index": 13,
+      "source_test_row_index": 19740,
+      "source_file": "Wednesday-workingHours.pcap_ISCX.csv",
+      "expected_label": "DoS GoldenEye",
+      "expected_binary_label": "ATTACK",
+      "offline_prediction": {
+        "attack_type": "DoS GoldenEye",
+        "attack_confidence": 0.999987,
+        "classifier_probability": 0.999987,
+        "classification_status": "Evaluated",
+        "is_anomaly": true,
+        "score": 797.2252807617188,
+        "threshold": 38.50959014892578,
+        "anomaly_confidence": 0.999,
+        "alert_type": "dual_signal",
+        "verdict": "Anomalous \u2014 DoS GoldenEye",
+        "verdict_confidence": 0.999987,
+        "detection_source": "dual_confirmed"
+      },
+      "eval_summary": {
+        "exact_class_match": true,
+        "binary_detection_match": true
+      }
+    },
+    {
+      "fixture_row_index": 14,
+      "source_test_row_index": 6852,
+      "source_file": "Wednesday-workingHours.pcap_ISCX.csv",
+      "expected_label": "DoS GoldenEye",
+      "expected_binary_label": "ATTACK",
+      "offline_prediction": {
+        "attack_type": "DoS GoldenEye",
+        "attack_confidence": 0.999962,
+        "classifier_probability": 0.999962,
+        "classification_status": "Evaluated",
+        "is_anomaly": true,
+        "score": 2161.02490234375,
+        "threshold": 38.50959014892578,
+        "anomaly_confidence": 0.999,
+        "alert_type": "dual_signal",
+        "verdict": "Anomalous \u2014 DoS GoldenEye",
+        "verdict_confidence": 0.999962,
+        "detection_source": "dual_confirmed"
+      },
+      "eval_summary": {
+        "exact_class_match": true,
+        "binary_detection_match": true
+      }
+    },
+    {
+      "fixture_row_index": 15,
+      "source_test_row_index": 16426,
+      "source_file": "Wednesday-workingHours.pcap_ISCX.csv",
+      "expected_label": "DoS GoldenEye",
+      "expected_binary_label": "ATTACK",
+      "offline_prediction": {
+        "attack_type": "DoS GoldenEye",
+        "attack_confidence": 0.99999,
+        "classifier_probability": 0.99999,
+        "classification_status": "Evaluated",
+        "is_anomaly": true,
+        "score": 96.81072998046875,
+        "threshold": 38.50959014892578,
+        "anomaly_confidence": 0.9985,
+        "alert_type": "dual_signal",
+        "verdict": "Anomalous \u2014 DoS GoldenEye",
+        "verdict_confidence": 0.99999,
+        "detection_source": "dual_confirmed"
+      },
+      "eval_summary": {
+        "exact_class_match": true,
+        "binary_detection_match": true
+      }
+    },
+    {
+      "fixture_row_index": 16,
+      "source_test_row_index": 6713,
+      "source_file": "Wednesday-workingHours.pcap_ISCX.csv",
+      "expected_label": "DoS GoldenEye",
+      "expected_binary_label": "ATTACK",
+      "offline_prediction": {
+        "attack_type": "DoS GoldenEye",
+        "attack_confidence": 0.999982,
+        "classifier_probability": 0.999982,
+        "classification_status": "Evaluated",
+        "is_anomaly": true,
+        "score": 1015.5512084960938,
+        "threshold": 38.50959014892578,
+        "anomaly_confidence": 0.999,
+        "alert_type": "dual_signal",
+        "verdict": "Anomalous \u2014 DoS GoldenEye",
+        "verdict_confidence": 0.999982,
+        "detection_source": "dual_confirmed"
+      },
+      "eval_summary": {
+        "exact_class_match": true,
+        "binary_detection_match": true
+      }
+    },
+    {
+      "fixture_row_index": 17,
+      "source_test_row_index": 2031,
+      "source_file": "Wednesday-workingHours.pcap_ISCX.csv",
+      "expected_label": "DoS Hulk",
+      "expected_binary_label": "ATTACK",
+      "offline_prediction": {
+        "attack_type": "DoS Hulk",
+        "attack_confidence": 0.999994,
+        "classifier_probability": 0.999994,
+        "classification_status": "Evaluated",
+        "is_anomaly": true,
+        "score": 400.3651428222656,
+        "threshold": 38.50959014892578,
+        "anomaly_confidence": 0.999,
+        "alert_type": "dual_signal",
+        "verdict": "Anomalous \u2014 DoS Hulk",
+        "verdict_confidence": 0.999994,
+        "detection_source": "dual_confirmed"
+      },
+      "eval_summary": {
+        "exact_class_match": true,
+        "binary_detection_match": true
+      }
+    },
+    {
+      "fixture_row_index": 18,
+      "source_test_row_index": 3246,
+      "source_file": "Wednesday-workingHours.pcap_ISCX.csv",
+      "expected_label": "DoS Hulk",
+      "expected_binary_label": "ATTACK",
+      "offline_prediction": {
+        "attack_type": "DoS Hulk",
+        "attack_confidence": 0.99999,
+        "classifier_probability": 0.99999,
+        "classification_status": "Evaluated",
+        "is_anomaly": true,
+        "score": 1808.34521484375,
+        "threshold": 38.50959014892578,
+        "anomaly_confidence": 0.999,
+        "alert_type": "dual_signal",
+        "verdict": "Anomalous \u2014 DoS Hulk",
+        "verdict_confidence": 0.99999,
+        "detection_source": "dual_confirmed"
+      },
+      "eval_summary": {
+        "exact_class_match": true,
+        "binary_detection_match": true
+      }
+    },
+    {
+      "fixture_row_index": 19,
+      "source_test_row_index": 4020,
+      "source_file": "Wednesday-workingHours.pcap_ISCX.csv",
+      "expected_label": "DoS Hulk",
+      "expected_binary_label": "ATTACK",
+      "offline_prediction": {
+        "attack_type": "DoS Hulk",
+        "attack_confidence": 0.999991,
+        "classifier_probability": 0.999991,
+        "classification_status": "Evaluated",
+        "is_anomaly": true,
+        "score": 407.5226745605469,
+        "threshold": 38.50959014892578,
+        "anomaly_confidence": 0.999,
+        "alert_type": "dual_signal",
+        "verdict": "Anomalous \u2014 DoS Hulk",
+        "verdict_confidence": 0.999991,
+        "detection_source": "dual_confirmed"
+      },
+      "eval_summary": {
+        "exact_class_match": true,
+        "binary_detection_match": true
+      }
+    },
+    {
+      "fixture_row_index": 20,
+      "source_test_row_index": 13397,
+      "source_file": "Wednesday-workingHours.pcap_ISCX.csv",
+      "expected_label": "DoS Hulk",
+      "expected_binary_label": "ATTACK",
+      "offline_prediction": {
+        "attack_type": "DoS Hulk",
+        "attack_confidence": 0.999991,
+        "classifier_probability": 0.999991,
+        "classification_status": "Evaluated",
+        "is_anomaly": true,
+        "score": 288.58441162109375,
+        "threshold": 38.50959014892578,
+        "anomaly_confidence": 0.999,
+        "alert_type": "dual_signal",
+        "verdict": "Anomalous \u2014 DoS Hulk",
+        "verdict_confidence": 0.999991,
+        "detection_source": "dual_confirmed"
+      },
+      "eval_summary": {
+        "exact_class_match": true,
+        "binary_detection_match": true
+      }
+    },
+    {
+      "fixture_row_index": 21,
+      "source_test_row_index": 14774,
+      "source_file": "Wednesday-workingHours.pcap_ISCX.csv",
+      "expected_label": "DoS Slowhttptest",
+      "expected_binary_label": "ATTACK",
+      "offline_prediction": {
+        "attack_type": "DoS Slowhttptest",
+        "attack_confidence": 0.999805,
+        "classifier_probability": 0.999805,
+        "classification_status": "Evaluated",
+        "is_anomaly": true,
+        "score": 19.379619598388672,
+        "threshold": 38.50959014892578,
+        "anomaly_confidence": 0.7703,
+        "alert_type": "known_attack",
+        "verdict": "Anomalous \u2014 DoS Slowhttptest",
+        "verdict_confidence": 0.999805,
+        "detection_source": "classifier_attack"
+      },
+      "eval_summary": {
+        "exact_class_match": true,
+        "binary_detection_match": true
+      }
+    },
+    {
+      "fixture_row_index": 22,
+      "source_test_row_index": 1002,
+      "source_file": "Wednesday-workingHours.pcap_ISCX.csv",
+      "expected_label": "DoS Slowhttptest",
+      "expected_binary_label": "ATTACK",
+      "offline_prediction": {
+        "attack_type": "DoS Slowhttptest",
+        "attack_confidence": 0.999905,
+        "classifier_probability": 0.999905,
+        "classification_status": "Evaluated",
+        "is_anomaly": true,
+        "score": 28.49996566772461,
+        "threshold": 38.50959014892578,
+        "anomaly_confidence": 0.6559,
+        "alert_type": "known_attack",
+        "verdict": "Anomalous \u2014 DoS Slowhttptest",
+        "verdict_confidence": 0.999905,
+        "detection_source": "classifier_attack"
+      },
+      "eval_summary": {
+        "exact_class_match": true,
+        "binary_detection_match": true
+      }
+    },
+    {
+      "fixture_row_index": 23,
+      "source_test_row_index": 5378,
+      "source_file": "Wednesday-workingHours.pcap_ISCX.csv",
+      "expected_label": "DoS Slowhttptest",
+      "expected_binary_label": "ATTACK",
+      "offline_prediction": {
+        "attack_type": "DoS Slowhttptest",
+        "attack_confidence": 0.999861,
+        "classifier_probability": 0.999861,
+        "classification_status": "Evaluated",
+        "is_anomaly": true,
+        "score": 6.408468723297119,
+        "threshold": 38.50959014892578,
+        "anomaly_confidence": 0.9198,
+        "alert_type": "known_attack",
+        "verdict": "Anomalous \u2014 DoS Slowhttptest",
+        "verdict_confidence": 0.999861,
+        "detection_source": "classifier_attack"
+      },
+      "eval_summary": {
+        "exact_class_match": true,
+        "binary_detection_match": true
+      }
+    },
+    {
+      "fixture_row_index": 24,
+      "source_test_row_index": 4967,
+      "source_file": "Wednesday-workingHours.pcap_ISCX.csv",
+      "expected_label": "DoS Slowhttptest",
+      "expected_binary_label": "ATTACK",
+      "offline_prediction": {
+        "attack_type": "DoS Slowhttptest",
+        "attack_confidence": 0.999678,
+        "classifier_probability": 0.999678,
+        "classification_status": "Evaluated",
+        "is_anomaly": true,
+        "score": 6.410306930541992,
+        "threshold": 38.50959014892578,
+        "anomaly_confidence": 0.9197,
+        "alert_type": "known_attack",
+        "verdict": "Anomalous \u2014 DoS Slowhttptest",
+        "verdict_confidence": 0.999678,
+        "detection_source": "classifier_attack"
+      },
+      "eval_summary": {
+        "exact_class_match": true,
+        "binary_detection_match": true
+      }
+    },
+    {
+      "fixture_row_index": 25,
+      "source_test_row_index": 4759,
+      "source_file": "Wednesday-workingHours.pcap_ISCX.csv",
+      "expected_label": "DoS slowloris",
+      "expected_binary_label": "ATTACK",
+      "offline_prediction": {
+        "attack_type": "DoS slowloris",
+        "attack_confidence": 0.999816,
+        "classifier_probability": 0.999816,
+        "classification_status": "Evaluated",
+        "is_anomaly": true,
+        "score": 3.194103479385376,
+        "threshold": 38.50959014892578,
+        "anomaly_confidence": 0.9552,
+        "alert_type": "known_attack",
+        "verdict": "Anomalous \u2014 DoS slowloris",
+        "verdict_confidence": 0.999816,
+        "detection_source": "classifier_attack"
+      },
+      "eval_summary": {
+        "exact_class_match": true,
+        "binary_detection_match": true
+      }
+    },
+    {
+      "fixture_row_index": 26,
+      "source_test_row_index": 19897,
+      "source_file": "Wednesday-workingHours.pcap_ISCX.csv",
+      "expected_label": "DoS slowloris",
+      "expected_binary_label": "ATTACK",
+      "offline_prediction": {
+        "attack_type": "DoS slowloris",
+        "attack_confidence": 0.999956,
+        "classifier_probability": 0.999956,
+        "classification_status": "Evaluated",
+        "is_anomaly": true,
+        "score": 17.69329071044922,
+        "threshold": 38.50959014892578,
+        "anomaly_confidence": 0.7905,
+        "alert_type": "known_attack",
+        "verdict": "Anomalous \u2014 DoS slowloris",
+        "verdict_confidence": 0.999956,
+        "detection_source": "classifier_attack"
+      },
+      "eval_summary": {
+        "exact_class_match": true,
+        "binary_detection_match": true
+      }
+    },
+    {
+      "fixture_row_index": 27,
+      "source_test_row_index": 2060,
+      "source_file": "Wednesday-workingHours.pcap_ISCX.csv",
+      "expected_label": "DoS slowloris",
+      "expected_binary_label": "ATTACK",
+      "offline_prediction": {
+        "attack_type": "DoS slowloris",
+        "attack_confidence": 0.949608,
+        "classifier_probability": 0.949608,
+        "classification_status": "Evaluated",
+        "is_anomaly": true,
+        "score": 3.1941049098968506,
+        "threshold": 38.50959014892578,
+        "anomaly_confidence": 0.9552,
+        "alert_type": "known_attack",
+        "verdict": "Anomalous \u2014 DoS slowloris",
+        "verdict_confidence": 0.949608,
+        "detection_source": "classifier_attack"
+      },
+      "eval_summary": {
+        "exact_class_match": true,
+        "binary_detection_match": true
+      }
+    },
+    {
+      "fixture_row_index": 28,
+      "source_test_row_index": 1778,
+      "source_file": "Wednesday-workingHours.pcap_ISCX.csv",
+      "expected_label": "DoS slowloris",
+      "expected_binary_label": "ATTACK",
+      "offline_prediction": {
+        "attack_type": "DoS slowloris",
+        "attack_confidence": 0.999875,
+        "classifier_probability": 0.999875,
+        "classification_status": "Evaluated",
+        "is_anomaly": true,
+        "score": 3.1941044330596924,
+        "threshold": 38.50959014892578,
+        "anomaly_confidence": 0.9552,
+        "alert_type": "known_attack",
+        "verdict": "Anomalous \u2014 DoS slowloris",
+        "verdict_confidence": 0.999875,
+        "detection_source": "classifier_attack"
+      },
+      "eval_summary": {
+        "exact_class_match": true,
+        "binary_detection_match": true
+      }
+    },
+    {
+      "fixture_row_index": 29,
+      "source_test_row_index": 10593,
+      "source_file": "Tuesday-WorkingHours.pcap_ISCX.csv",
+      "expected_label": "FTP-Patator",
+      "expected_binary_label": "ATTACK",
+      "offline_prediction": {
+        "attack_type": "FTP-Patator",
+        "attack_confidence": 0.999959,
+        "classifier_probability": 0.999959,
+        "classification_status": "Evaluated",
+        "is_anomaly": true,
+        "score": 4.247305393218994,
+        "threshold": 38.50959014892578,
+        "anomaly_confidence": 0.9437,
+        "alert_type": "known_attack",
+        "verdict": "Anomalous \u2014 FTP-Patator",
+        "verdict_confidence": 0.999959,
+        "detection_source": "classifier_attack"
+      },
+      "eval_summary": {
+        "exact_class_match": true,
+        "binary_detection_match": true
+      }
+    },
+    {
+      "fixture_row_index": 30,
+      "source_test_row_index": 14912,
+      "source_file": "Tuesday-WorkingHours.pcap_ISCX.csv",
+      "expected_label": "FTP-Patator",
+      "expected_binary_label": "ATTACK",
+      "offline_prediction": {
+        "attack_type": "FTP-Patator",
+        "attack_confidence": 0.999968,
+        "classifier_probability": 0.999968,
+        "classification_status": "Evaluated",
+        "is_anomaly": true,
+        "score": 3.393728017807007,
+        "threshold": 38.50959014892578,
+        "anomaly_confidence": 0.953,
+        "alert_type": "known_attack",
+        "verdict": "Anomalous \u2014 FTP-Patator",
+        "verdict_confidence": 0.999968,
+        "detection_source": "classifier_attack"
+      },
+      "eval_summary": {
+        "exact_class_match": true,
+        "binary_detection_match": true
+      }
+    },
+    {
+      "fixture_row_index": 31,
+      "source_test_row_index": 16637,
+      "source_file": "Tuesday-WorkingHours.pcap_ISCX.csv",
+      "expected_label": "FTP-Patator",
+      "expected_binary_label": "ATTACK",
+      "offline_prediction": {
+        "attack_type": "FTP-Patator",
+        "attack_confidence": 0.999964,
+        "classifier_probability": 0.999964,
+        "classification_status": "Evaluated",
+        "is_anomaly": true,
+        "score": 4.235085487365723,
+        "threshold": 38.50959014892578,
+        "anomaly_confidence": 0.9438,
+        "alert_type": "known_attack",
+        "verdict": "Anomalous \u2014 FTP-Patator",
+        "verdict_confidence": 0.999964,
+        "detection_source": "classifier_attack"
+      },
+      "eval_summary": {
+        "exact_class_match": true,
+        "binary_detection_match": true
+      }
+    },
+    {
+      "fixture_row_index": 32,
+      "source_test_row_index": 13497,
+      "source_file": "Tuesday-WorkingHours.pcap_ISCX.csv",
+      "expected_label": "FTP-Patator",
+      "expected_binary_label": "ATTACK",
+      "offline_prediction": {
+        "attack_type": "FTP-Patator",
+        "attack_confidence": 0.999963,
+        "classifier_probability": 0.999963,
+        "classification_status": "Evaluated",
+        "is_anomaly": true,
+        "score": 4.249959468841553,
+        "threshold": 38.50959014892578,
+        "anomaly_confidence": 0.9436,
+        "alert_type": "known_attack",
+        "verdict": "Anomalous \u2014 FTP-Patator",
+        "verdict_confidence": 0.999963,
+        "detection_source": "classifier_attack"
+      },
+      "eval_summary": {
+        "exact_class_match": true,
+        "binary_detection_match": true
+      }
+    },
+    {
+      "fixture_row_index": 33,
+      "source_test_row_index": 8083,
+      "source_file": "Friday-WorkingHours-Afternoon-PortScan.pcap_ISCX.csv",
+      "expected_label": "PortScan",
+      "expected_binary_label": "ATTACK",
+      "offline_prediction": {
+        "attack_type": "PortScan",
+        "attack_confidence": 0.999999,
+        "classifier_probability": 0.999999,
+        "classification_status": "Evaluated",
+        "is_anomaly": true,
+        "score": 4.1772308349609375,
+        "threshold": 38.50959014892578,
+        "anomaly_confidence": 0.9444,
+        "alert_type": "known_attack",
+        "verdict": "Anomalous \u2014 PortScan",
+        "verdict_confidence": 0.999999,
+        "detection_source": "classifier_attack"
+      },
+      "eval_summary": {
+        "exact_class_match": true,
+        "binary_detection_match": true
+      }
+    },
+    {
+      "fixture_row_index": 34,
+      "source_test_row_index": 16054,
+      "source_file": "Friday-WorkingHours-Afternoon-PortScan.pcap_ISCX.csv",
+      "expected_label": "PortScan",
+      "expected_binary_label": "ATTACK",
+      "offline_prediction": {
+        "attack_type": "PortScan",
+        "attack_confidence": 0.999994,
+        "classifier_probability": 0.999994,
+        "classification_status": "Evaluated",
+        "is_anomaly": true,
+        "score": 9.572129249572754,
+        "threshold": 38.50959014892578,
+        "anomaly_confidence": 0.8843,
+        "alert_type": "known_attack",
+        "verdict": "Anomalous \u2014 PortScan",
+        "verdict_confidence": 0.999994,
+        "detection_source": "classifier_attack"
+      },
+      "eval_summary": {
+        "exact_class_match": true,
+        "binary_detection_match": true
+      }
+    },
+    {
+      "fixture_row_index": 35,
+      "source_test_row_index": 1148,
+      "source_file": "Friday-WorkingHours-Afternoon-PortScan.pcap_ISCX.csv",
+      "expected_label": "PortScan",
+      "expected_binary_label": "ATTACK",
+      "offline_prediction": {
+        "attack_type": "PortScan",
+        "attack_confidence": 0.999795,
+        "classifier_probability": 0.999795,
+        "classification_status": "Evaluated",
+        "is_anomaly": true,
+        "score": 7.92804479598999,
+        "threshold": 38.50959014892578,
+        "anomaly_confidence": 0.9028,
+        "alert_type": "known_attack",
+        "verdict": "Anomalous \u2014 PortScan",
+        "verdict_confidence": 0.999795,
+        "detection_source": "classifier_attack"
+      },
+      "eval_summary": {
+        "exact_class_match": true,
+        "binary_detection_match": true
+      }
+    },
+    {
+      "fixture_row_index": 36,
+      "source_test_row_index": 15950,
+      "source_file": "Friday-WorkingHours-Afternoon-PortScan.pcap_ISCX.csv",
+      "expected_label": "PortScan",
+      "expected_binary_label": "ATTACK",
+      "offline_prediction": {
+        "attack_type": "PortScan",
+        "attack_confidence": 0.999995,
+        "classifier_probability": 0.999995,
+        "classification_status": "Evaluated",
+        "is_anomaly": true,
+        "score": 4.0801215171813965,
+        "threshold": 38.50959014892578,
+        "anomaly_confidence": 0.9455,
+        "alert_type": "known_attack",
+        "verdict": "Anomalous \u2014 PortScan",
+        "verdict_confidence": 0.999995,
+        "detection_source": "classifier_attack"
+      },
+      "eval_summary": {
+        "exact_class_match": true,
+        "binary_detection_match": true
+      }
+    },
+    {
+      "fixture_row_index": 37,
+      "source_test_row_index": 12701,
+      "source_file": "Tuesday-WorkingHours.pcap_ISCX.csv",
+      "expected_label": "SSH-Patator",
+      "expected_binary_label": "ATTACK",
+      "offline_prediction": {
+        "attack_type": "SSH-Patator",
+        "attack_confidence": 0.999937,
+        "classifier_probability": 0.999937,
+        "classification_status": "Evaluated",
+        "is_anomaly": true,
+        "score": 4.954057693481445,
+        "threshold": 38.50959014892578,
+        "anomaly_confidence": 0.9359,
+        "alert_type": "known_attack",
+        "verdict": "Anomalous \u2014 SSH-Patator",
+        "verdict_confidence": 0.999937,
+        "detection_source": "classifier_attack"
+      },
+      "eval_summary": {
+        "exact_class_match": true,
+        "binary_detection_match": true
+      }
+    },
+    {
+      "fixture_row_index": 38,
+      "source_test_row_index": 19950,
+      "source_file": "Tuesday-WorkingHours.pcap_ISCX.csv",
+      "expected_label": "SSH-Patator",
+      "expected_binary_label": "ATTACK",
+      "offline_prediction": {
+        "attack_type": "SSH-Patator",
+        "attack_confidence": 0.999955,
+        "classifier_probability": 0.999955,
+        "classification_status": "Evaluated",
+        "is_anomaly": true,
+        "score": 7.641183853149414,
+        "threshold": 38.50959014892578,
+        "anomaly_confidence": 0.906,
+        "alert_type": "known_attack",
+        "verdict": "Anomalous \u2014 SSH-Patator",
+        "verdict_confidence": 0.999955,
+        "detection_source": "classifier_attack"
+      },
+      "eval_summary": {
+        "exact_class_match": true,
+        "binary_detection_match": true
+      }
+    },
+    {
+      "fixture_row_index": 39,
+      "source_test_row_index": 3238,
+      "source_file": "Tuesday-WorkingHours.pcap_ISCX.csv",
+      "expected_label": "SSH-Patator",
+      "expected_binary_label": "ATTACK",
+      "offline_prediction": {
+        "attack_type": "SSH-Patator",
+        "attack_confidence": 0.999956,
+        "classifier_probability": 0.999956,
+        "classification_status": "Evaluated",
+        "is_anomaly": true,
+        "score": 7.654080390930176,
+        "threshold": 38.50959014892578,
+        "anomaly_confidence": 0.9059,
+        "alert_type": "known_attack",
+        "verdict": "Anomalous \u2014 SSH-Patator",
+        "verdict_confidence": 0.999956,
+        "detection_source": "classifier_attack"
+      },
+      "eval_summary": {
+        "exact_class_match": true,
+        "binary_detection_match": true
+      }
+    },
+    {
+      "fixture_row_index": 40,
+      "source_test_row_index": 1962,
+      "source_file": "Tuesday-WorkingHours.pcap_ISCX.csv",
+      "expected_label": "SSH-Patator",
+      "expected_binary_label": "ATTACK",
+      "offline_prediction": {
+        "attack_type": "SSH-Patator",
+        "attack_confidence": 0.999958,
+        "classifier_probability": 0.999958,
+        "classification_status": "Evaluated",
+        "is_anomaly": true,
+        "score": 7.645412445068359,
+        "threshold": 38.50959014892578,
+        "anomaly_confidence": 0.906,
+        "alert_type": "known_attack",
+        "verdict": "Anomalous \u2014 SSH-Patator",
+        "verdict_confidence": 0.999958,
+        "detection_source": "classifier_attack"
+      },
+      "eval_summary": {
+        "exact_class_match": true,
+        "binary_detection_match": true
+      }
+    },
+    {
+      "fixture_row_index": 41,
+      "source_test_row_index": 965,
+      "source_file": "Thursday-WorkingHours-Morning-WebAttacks.pcap_ISCX.csv",
+      "expected_label": "Web Attack Brute Force",
+      "expected_binary_label": "ATTACK",
+      "offline_prediction": {
+        "attack_type": "Web Attack Brute Force",
+        "attack_confidence": 0.976014,
+        "classifier_probability": 0.976014,
+        "classification_status": "Evaluated",
+        "is_anomaly": true,
+        "score": 1.6404409408569336,
+        "threshold": 38.50959014892578,
+        "anomaly_confidence": 0.9722,
+        "alert_type": "known_attack",
+        "verdict": "Anomalous \u2014 Web Attack Brute Force",
+        "verdict_confidence": 0.976014,
+        "detection_source": "classifier_attack"
+      },
+      "eval_summary": {
+        "exact_class_match": true,
+        "binary_detection_match": true
+      }
+    },
+    {
+      "fixture_row_index": 42,
+      "source_test_row_index": 7187,
+      "source_file": "Thursday-WorkingHours-Morning-WebAttacks.pcap_ISCX.csv",
+      "expected_label": "Web Attack Brute Force",
+      "expected_binary_label": "ATTACK",
+      "offline_prediction": {
+        "attack_type": "Web Attack Brute Force",
+        "attack_confidence": 0.99799,
+        "classifier_probability": 0.99799,
+        "classification_status": "Evaluated",
+        "is_anomaly": true,
+        "score": 4.7892327308654785,
+        "threshold": 38.50959014892578,
+        "anomaly_confidence": 0.9377,
+        "alert_type": "known_attack",
+        "verdict": "Anomalous \u2014 Web Attack Brute Force",
+        "verdict_confidence": 0.99799,
+        "detection_source": "classifier_attack"
+      },
+      "eval_summary": {
+        "exact_class_match": true,
+        "binary_detection_match": true
+      }
+    },
+    {
+      "fixture_row_index": 43,
+      "source_test_row_index": 10178,
+      "source_file": "Thursday-WorkingHours-Morning-WebAttacks.pcap_ISCX.csv",
+      "expected_label": "Web Attack Brute Force",
+      "expected_binary_label": "ATTACK",
+      "offline_prediction": {
+        "attack_type": "Web Attack Brute Force",
+        "attack_confidence": 0.990241,
+        "classifier_probability": 0.990241,
+        "classification_status": "Evaluated",
+        "is_anomaly": true,
+        "score": 1.6403002738952637,
+        "threshold": 38.50959014892578,
+        "anomaly_confidence": 0.9722,
+        "alert_type": "known_attack",
+        "verdict": "Anomalous \u2014 Web Attack Brute Force",
+        "verdict_confidence": 0.990241,
+        "detection_source": "classifier_attack"
+      },
+      "eval_summary": {
+        "exact_class_match": true,
+        "binary_detection_match": true
+      }
+    },
+    {
+      "fixture_row_index": 44,
+      "source_test_row_index": 13297,
+      "source_file": "Thursday-WorkingHours-Morning-WebAttacks.pcap_ISCX.csv",
+      "expected_label": "Web Attack Brute Force",
+      "expected_binary_label": "ATTACK",
+      "offline_prediction": {
+        "attack_type": "Web Attack Brute Force",
+        "attack_confidence": 0.954528,
+        "classifier_probability": 0.954528,
+        "classification_status": "Evaluated",
+        "is_anomaly": true,
+        "score": 1.6402415037155151,
+        "threshold": 38.50959014892578,
+        "anomaly_confidence": 0.9722,
+        "alert_type": "known_attack",
+        "verdict": "Anomalous \u2014 Web Attack Brute Force",
+        "verdict_confidence": 0.954528,
+        "detection_source": "classifier_attack"
+      },
+      "eval_summary": {
+        "exact_class_match": true,
+        "binary_detection_match": true
+      }
+    },
+    {
+      "fixture_row_index": 45,
+      "source_test_row_index": 12044,
+      "source_file": "Thursday-WorkingHours-Morning-WebAttacks.pcap_ISCX.csv",
+      "expected_label": "Web Attack XSS",
+      "expected_binary_label": "ATTACK",
+      "offline_prediction": {
+        "attack_type": "Web Attack Brute Force",
+        "attack_confidence": 0.926058,
+        "classifier_probability": 0.926058,
+        "classification_status": "Evaluated",
+        "is_anomaly": true,
+        "score": 4.9206132888793945,
+        "threshold": 38.50959014892578,
+        "anomaly_confidence": 0.9362,
+        "alert_type": "known_attack",
+        "verdict": "Anomalous \u2014 Web Attack Brute Force",
+        "verdict_confidence": 0.926058,
+        "detection_source": "classifier_attack"
+      },
+      "eval_summary": {
+        "exact_class_match": false,
+        "binary_detection_match": true
+      }
+    },
+    {
+      "fixture_row_index": 46,
+      "source_test_row_index": 7325,
+      "source_file": "Thursday-WorkingHours-Morning-WebAttacks.pcap_ISCX.csv",
+      "expected_label": "Web Attack XSS",
+      "expected_binary_label": "ATTACK",
+      "offline_prediction": {
+        "attack_type": "Web Attack Brute Force",
+        "attack_confidence": 0.948992,
+        "classifier_probability": 0.948992,
+        "classification_status": "Evaluated",
+        "is_anomaly": true,
+        "score": 1.6404471397399902,
+        "threshold": 38.50959014892578,
+        "anomaly_confidence": 0.9722,
+        "alert_type": "known_attack",
+        "verdict": "Anomalous \u2014 Web Attack Brute Force",
+        "verdict_confidence": 0.948992,
+        "detection_source": "classifier_attack"
+      },
+      "eval_summary": {
+        "exact_class_match": false,
+        "binary_detection_match": true
+      }
+    },
+    {
+      "fixture_row_index": 47,
+      "source_test_row_index": 19806,
+      "source_file": "Thursday-WorkingHours-Morning-WebAttacks.pcap_ISCX.csv",
+      "expected_label": "Web Attack XSS",
+      "expected_binary_label": "ATTACK",
+      "offline_prediction": {
+        "attack_type": "Web Attack XSS",
+        "attack_confidence": 0.694425,
+        "classifier_probability": 0.694425,
+        "classification_status": "Evaluated",
+        "is_anomaly": true,
+        "score": 1.6402099132537842,
+        "threshold": 38.50959014892578,
+        "anomaly_confidence": 0.9722,
+        "alert_type": "known_attack",
+        "verdict": "Anomalous \u2014 Web Attack XSS",
+        "verdict_confidence": 0.694425,
+        "detection_source": "classifier_attack"
+      },
+      "eval_summary": {
+        "exact_class_match": true,
+        "binary_detection_match": true
+      }
+    },
+    {
+      "fixture_row_index": 48,
+      "source_test_row_index": 3313,
+      "source_file": "Thursday-WorkingHours-Morning-WebAttacks.pcap_ISCX.csv",
+      "expected_label": "Web Attack XSS",
+      "expected_binary_label": "ATTACK",
+      "offline_prediction": {
+        "attack_type": "Web Attack XSS",
+        "attack_confidence": 0.914076,
+        "classifier_probability": 0.914076,
+        "classification_status": "Evaluated",
+        "is_anomaly": true,
+        "score": 1.6403769254684448,
+        "threshold": 38.50959014892578,
+        "anomaly_confidence": 0.9722,
+        "alert_type": "known_attack",
+        "verdict": "Anomalous \u2014 Web Attack XSS",
+        "verdict_confidence": 0.914076,
+        "detection_source": "classifier_attack"
+      },
+      "eval_summary": {
+        "exact_class_match": true,
+        "binary_detection_match": true
+      }
+    }
+  ]
+}

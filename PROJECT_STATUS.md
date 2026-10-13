@@ -1,9 +1,9 @@
 # CYPHER Intrusion Detection System — Project Status
 
 **Living Architecture & Codebase Status**  
-**Current Iteration Completed:** Milestone 8 (Detection Quality Verification & Separate Anomaly Alerts)  
+**Current Iteration Completed:** Milestone 9 (Manual Crosscheck Fixture for CYPHER IDS Validation)  
 **Date:** October 13, 2026  
-**Status:** Decoupled 4-State Alert Architecture, 0.00% Zero-Duplicate Benchmark, 81/81 Passing Tests
+**Status:** Manual Testable Crosscheck Fixture Delivered, 86/86 Passing Tests, Zero Leaked Labels
 
 ---
 
@@ -428,3 +428,35 @@ Full formal evaluation report available in [LEAKAGE_RESISTANT_EVALUATION.md](fil
 - **Verification Suite:**
   - **81 / 81 backend tests passed** (`pytest tests/ -v` in 12.13s), including 6 new tests in `tests/test_alert_architecture.py`.
   - **Frontend production build succeeded** (`npm --prefix frontend run build` in 1.69s).
+
+---
+
+## 12. Manual Crosscheck Fixture Milestone
+
+A compact, manually testable verification dataset was constructed directly from the duplicate-resistant held-out CICIDS2017 test split (`ml/splits_leakage_resistant/test.csv`) to enable manual cross-checking and live application validation without data fabrication or label leakage.
+
+### 12.1 Artifact Deliverables
+1. **[`tests/fixtures/manual_crosscheck.csv`](file:///c:/Users/msi/Projects/Cypher/tests/fixtures/manual_crosscheck.csv):**
+   - 49 total flows: 5 `BENIGN` flows and 4 flows for each of the 11 attack classes (44 attack flows).
+   - Columns 0–77: 78 canonical XGBoost features matching `ml/features.py:XGB_FEATURE_NAMES` in exact active classifier order (including canonical handling of `Fwd Header Length.1`).
+   - Columns 78–79: `expected_label` and `expected_binary_label` appended at the end and strictly excluded from model inference inputs.
+2. **[`tests/fixtures/manual_crosscheck_manifest.json`](file:///c:/Users/msi/Projects/Cypher/tests/fixtures/manual_crosscheck_manifest.json):**
+   - Records source row indices from `test.csv`, source `.pcap_ISCX.csv` files, sampling methodology (stratified deterministic random sampling, seed=42), class counts, SHA-256 checksum (`d697a9441cc4eae37ce6d4596b65ee54808400150fc9125a73ebade507e14bad`), and offline baseline predictions.
+3. **[`tests/fixtures/README.md`](file:///c:/Users/msi/Projects/Cypher/tests/fixtures/README.md):**
+   - Operator guide for testing via the Web Dashboard UI (`Upload CSV Report`) or API endpoints (`/analyze-csv`, `/predict`).
+   - Clear instructions on keeping expected label columns out of model inputs.
+   - Comprehensive ground-truth comparison table and baseline expectations.
+4. **[`tests/test_fixtures.py`](file:///c:/Users/msi/Projects/Cypher/tests/test_fixtures.py):**
+   - 5 automated regression tests asserting schema compliance, feature ordering, non-finite absence, manifest hash integrity, class coverage across all 12 classes, and pipeline execution without label leakage.
+
+### 12.2 Empirical Offline Crosscheck Findings
+- **Class Shortages:** None. All 12 classes in `test.csv` had ample samples (minimum was `Web Attack XSS` with 98 samples; required was 3–5).
+- **Exact Multiclass Agreement:** 46 / 49 (93.88%).
+- **Binary Intrusion Detection Agreement:** 48 / 49 (97.96%).
+- **Attack Recall on Fixture:** 44 / 44 (100.00%).
+- **Documented Discrepancies:**
+  - Row 0 (`BENIGN`): Triggers `anomaly_candidate` (`verdict: Anomalous — Attack Type Unclassified`, confidence 0.9990) due to VAE reconstruction score exceeding threshold $\tau=38.51$. The supervised classifier correctly does not flag a known attack, demonstrating the decoupled 4-state alert policy in practice.
+  - Rows 45–46 (`Web Attack XSS`): Classified as `Web Attack Brute Force` (sibling web attack within the same application attack family), consistent with CICIDS2017 feature overlap. Binary attack detection remains 100% correct.
+- **Verification Suite:**
+  - **86 / 86 tests passed** (`pytest tests/ -v`).
+  - **Frontend production build succeeded** (`npm --prefix frontend run build` in 1.60s).

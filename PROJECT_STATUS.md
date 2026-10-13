@@ -361,3 +361,21 @@ In the 4-state hybrid architecture:
 | **Classifier Benchmark** | `python ml/benchmark_classifiers.py` | **PASSED** | Generated comparative metrics saved to `ml/reports/classifier_benchmark_comparison.json`. |
 | **VAE Determinism Verification** | `python -m ml.evaluate_vae` | **PASSED** | Inter-run variance on identical inputs strictly 0.000000. |
 
+---
+
+## 8. Final Independent ML Validation & End-to-End Verification
+
+Full formal validation report available in [FINAL_VALIDATION_REPORT.md](file:///c:/Users/msi/Projects/Cypher/FINAL_VALIDATION_REPORT.md).
+
+### 8.1 Key Independent Findings
+- **XGBoost 12-Class Reproduction:** 99.37% test accuracy, 0.9309 Macro-F1, 0.9936 Weighted-F1 independently reproduced on 20,931 held-out test flows.
+- **Metric Disentanglement:**
+  - **Binary Attack Detection Recall:** **99.95%** (17,172 TP, 9 FN, 185 FP, 3,565 TN, FPR: 4.93%, Binary Accuracy: 99.07%).
+  - **Multiclass Threat Attribution:** **98.52%** overall 12-class attribution accuracy (20,622 / 20,931) and **99.27%** on detected attack flows.
+- **Data Leakage & Duplicate Overlap:** 11.79% (2,467 / 20,931) of test rows share identical 78-dimensional feature tuples with training data, caused by random stratified splitting on automated attack scripts (`SSH-Patator` 48.81%, `FTP-Patator` 27.28%, `DoS Hulk` 23.89%). Benign overlap is minimal (1.47%) and Web Attack XSS has 0.00% overlap. No models or thresholds were chosen via test set contamination.
+- **Weak Class Analysis (`Web Attack XSS` & `Brute Force`):** Standalone XSS recall is 38.78% because 60.20% of XSS flows are classified as Web Attack Brute Force. However, **98.46% (319 / 324)** of all web attack flows are correctly flagged as Web Attacks. The ambiguity is caused by identical layer-3/4 flow statistical distributions targeting the same server over port 80 in the absence of HTTP payload inspection.
+- **API Parity & Robustness:** 100% prediction parity between FastAPI endpoints (`/predict`, `/analyze-batch`) and direct model inference. Strict HTTP 422 rejections for `NaN`, `Inf`, empty payloads, and unparseable strings.
+- **Automated Regression Suite:** 67 / 67 automated pytest tests passed in 11.75s.
+- **Frontend Production Build:** `tsc -b && vite build` succeeded in 1.60s with zero errors.
+
+

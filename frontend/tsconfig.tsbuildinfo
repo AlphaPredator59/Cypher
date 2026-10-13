@@ -1,1 +1,0 @@
-{"root":["./src/app.tsx","./src/scene.tsx","./src/main.tsx","./src/threeui.ts","./src/vite-env.d.ts","./src/shaders/crt/crtbackground.tsx","./src/shaders/crt/crtrenderer.ts","./src/shaders/crt/crtscreens.ts","./src/shaders/crt/crtshaders.ts","./vite.config.ts"],"version":"5.9.3"}

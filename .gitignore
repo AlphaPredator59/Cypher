@@ -35,18 +35,31 @@ artifacts/**
 solarmainframe/
 ml/splits/
 *.csv
+!tests/*.csv
 
 # Generated reports / analysis outputs
 vae_analysis_report.csv
 vae_analysis_report.json
 validation_report.json
+threshold_sweep_validation.json
+ml/reports/
+tests/verified_mixed_100_validation_report.json
 *.log
 
 # Node / frontend
 node_modules/
+frontend/node_modules/
 dist/
+frontend/dist/
 build/
+frontend/build/
 .vite/
+frontend/.vite/
+*.tsbuildinfo
+frontend/tsconfig.tsbuildinfo
+
+# Scratch and local experiments
+scratch/
 
 # IDE / OS
 .idea/

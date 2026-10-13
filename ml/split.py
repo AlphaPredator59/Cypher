@@ -5,8 +5,12 @@ from pathlib import Path
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
-from data import load_all_data
-from preprocess import preprocess
+try:
+    from ml.data import load_all_data
+    from ml.preprocess import preprocess
+except ImportError:
+    from data import load_all_data
+    from preprocess import preprocess
 
 
 RANDOM_STATE = 42

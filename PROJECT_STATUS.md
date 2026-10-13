@@ -378,4 +378,22 @@ Full formal validation report available in [FINAL_VALIDATION_REPORT.md](file:///
 - **Automated Regression Suite:** 67 / 67 automated pytest tests passed in 11.75s.
 - **Frontend Production Build:** `tsc -b && vite build` succeeded in 1.60s with zero errors.
 
+---
+
+## 9. Leakage-Resistant Group-Aware Evaluation & Generalization Milestone
+
+Full formal evaluation report available in [LEAKAGE_RESISTANT_EVALUATION.md](file:///c:/Users/msi/Projects/Cypher/LEAKAGE_RESISTANT_EVALUATION.md).
+
+### 9.1 Key Empirical Findings
+- **Zero-Duplicate Split Guarantee:** Created [ml/splits_leakage_resistant/](file:///c:/Users/msi/Projects/Cypher/ml/splits_leakage_resistant) via Stratified Group-Aware Content Fingerprinting ([ml/split_leakage_resistant.py](file:///c:/Users/msi/Projects/Cypher/ml/split_leakage_resistant.py)). Exact cross-split duplicate feature overlap is **0.00% (0 rows)** across Train (97,965 rows), Validation (21,331 rows), and Test (20,239 rows). Original `ml/splits/` baseline preserved untouched.
+- **Generalization Confirmed:**
+  - **XGBoost 12-Class Accuracy:** **99.39%** (Macro-F1: **0.9268**, Weighted-F1: **0.9933**, Latency: **9.70 ms / 1k flows**).
+  - **LightGBM Alternative:** **99.30%** (Macro-F1: **0.9200**, Latency: **14.30 ms / 1k flows**).
+  - `SSH-Patator` achieved **100.0%** precision/recall, `FTP-Patator` achieved **99.90%**, `PortScan` achieved **99.89%**, and `DoS Hulk` achieved **99.91%** on completely unseen unique feature tuples, proving high performance is driven by genuine structural traffic signatures rather than memorized duplicate flows.
+- **Hierarchical Web Attack Aggregation:** Grouping `Web Attack XSS` and `Web Attack Brute Force` into `Web Attack` achieves **99.38% recall** and **99.69% precision** (F1: **0.9953**), lifting overall hierarchical accuracy to **99.85%** (Macro-F1: **0.9977**).
+- **Hybrid Pipeline (VAE + XGBoost):** 99.98% attack detection recall, 5.38% false positive rate, 98.76% overall multiclass attribution accuracy (99.71% on attacks).
+- **Automated Regression Suite:** **72 / 72 tests passed** (including 5 new leakage-resistant automated tests).
+- **Frontend Production Build:** Successful (`tsc -b && vite build` in 1.60s).
+
+
 

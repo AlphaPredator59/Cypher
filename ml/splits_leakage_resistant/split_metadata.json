@@ -1,0 +1,53 @@
+{
+  "generator": "ml/split_leakage_resistant.py",
+  "random_state": 42,
+  "strategy": "Stratified Group-Aware Content Fingerprint (Zero-Duplicate)",
+  "train_rows": 97965,
+  "val_rows": 21331,
+  "test_rows": 20239,
+  "cross_split_test_train_overlap": 0,
+  "cross_split_test_val_overlap": 0,
+  "cross_split_val_train_overlap": 0,
+  "train_class_counts": {
+    "BENIGN": 17508,
+    "DDoS": 17499,
+    "PortScan": 17495,
+    "DoS Hulk": 17452,
+    "DoS GoldenEye": 7204,
+    "FTP-Patator": 5817,
+    "SSH-Patator": 4159,
+    "DoS slowloris": 4101,
+    "DoS Slowhttptest": 3851,
+    "Bot": 1368,
+    "Web Attack Brute Force": 1055,
+    "Web Attack XSS": 456
+  },
+  "val_class_counts": {
+    "DoS Hulk": 4326,
+    "DDoS": 3751,
+    "PortScan": 3746,
+    "BENIGN": 3720,
+    "DoS GoldenEye": 1545,
+    "FTP-Patator": 1116,
+    "DoS Slowhttptest": 860,
+    "DoS slowloris": 858,
+    "SSH-Patator": 791,
+    "Bot": 292,
+    "Web Attack Brute Force": 228,
+    "Web Attack XSS": 98
+  },
+  "test_class_counts": {
+    "BENIGN": 3772,
+    "PortScan": 3759,
+    "DDoS": 3750,
+    "DoS Hulk": 3222,
+    "DoS GoldenEye": 1544,
+    "FTP-Patator": 1002,
+    "SSH-Patator": 947,
+    "DoS slowloris": 837,
+    "DoS Slowhttptest": 788,
+    "Bot": 296,
+    "Web Attack Brute Force": 224,
+    "Web Attack XSS": 98
+  }
+}

@@ -241,7 +241,7 @@ def calibrate_anomaly_confidence(score: float, threshold: float) -> float:
         return float(np.clip(0.50 + 0.499 * (1.0 - np.exp(-4.5 * delta)), 0.50, 0.999))
 
 
-from ml.features import VAE_TO_RAW_MAPPING
+from ml.features import VAE_TO_RAW_MAPPING, MOE_FEATURE_NAMES
 from ml.classifier import XGBAttackClassifier
 
 
@@ -256,10 +256,9 @@ class ThreatPipeline:
         attack_confidence_threshold: float = 0.50,
     ):
         self.vae = vae_scorer
-        self.moe = moe_predictor if moe_predictor is not None else MoEPredictor()
+        self._moe_instance = moe_predictor
         self.xgb_classifier = classifier if classifier is not None else XGBAttackClassifier()
         self.active_classifier = active_classifier
-        self.classifier = self.xgb_classifier if active_classifier == "xgb" else self.moe
         self.attack_confidence_threshold = float(attack_confidence_threshold)
         self.vae_feature_names = vae_feature_names or [
             "Dst Port", "Flow Duration", "Tot Fwd Pkts", "Tot Bwd Pkts",
@@ -282,6 +281,24 @@ class ThreatPipeline:
             "Fwd Seg Size Min", "Active Mean", "Active Std", "Active Max",
             "Active Min", "Idle Mean", "Idle Std", "Idle Max", "Idle Min"
         ]
+
+    @property
+    def moe(self) -> MoEPredictor:
+        if self._moe_instance is None:
+            self._moe_instance = MoEPredictor(moe_dir=os.path.join(ART_DIR, "moeModels"))
+        return self._moe_instance
+
+    @moe.setter
+    def moe(self, val: Any) -> None:
+        self._moe_instance = val
+
+    @property
+    def classifier(self) -> Any:
+        return self.moe if self.active_classifier == "moe" else self.xgb_classifier
+
+    @classifier.setter
+    def classifier(self, val: Any) -> None:
+        self.xgb_classifier = val
 
     def _dicts_to_matrix(self, rows: List[Dict[str, Any]], cols: List[str]) -> np.ndarray:
         X = np.zeros((len(rows), len(cols)), dtype=np.float32)
@@ -309,8 +326,9 @@ class ThreatPipeline:
 
         # Determine active classifier backend (auto-respect monkeypatched self.moe in unit tests)
         is_moe_monkeypatched = (
-            hasattr(self.moe, "predict_batch")
-            and getattr(self.moe.predict_batch, "__name__", "") != "predict_batch"
+            self._moe_instance is not None
+            and hasattr(self._moe_instance, "predict_batch")
+            and getattr(self._moe_instance.predict_batch, "__name__", "") != "predict_batch"
         )
         if self.active_classifier == "moe" or is_moe_monkeypatched:
             active_clf = self.moe
@@ -431,11 +449,30 @@ vae_feature_names: List[str] = meta["feature_names"]
 assert len(vae_feature_names) == 77, f"Expected 77, got {len(vae_feature_names)}"
 
 vae = VAEScorer()
-moe = MoEPredictor(moe_dir=os.path.join(ART_DIR, "moeModels"))
 classifier = XGBAttackClassifier()
+
+
+class _LazyMoEProxy:
+    def __init__(self):
+        self._instance = None
+
+    def _get_instance(self) -> MoEPredictor:
+        if self._instance is None:
+            self._instance = MoEPredictor(moe_dir=os.path.join(ART_DIR, "moeModels"))
+        return self._instance
+
+    def __getattr__(self, name: str) -> Any:
+        return getattr(self._get_instance(), name)
+
+    def predict_batch(self, *args, **kwargs):
+        return self._get_instance().predict_batch(*args, **kwargs)
+
+
+moe = _LazyMoEProxy()
+
 PIPELINE = ThreatPipeline(
     vae_scorer=vae,
-    moe_predictor=moe,
+    moe_predictor=None,
     classifier=classifier,
     active_classifier="xgb",
     attack_confidence_threshold=0.50,
@@ -453,7 +490,7 @@ def validate_rows(rows: List[Dict[str, Any]]) -> Dict[str, Any]:
 
     for i, r in enumerate(rows):
         mv = _missing_keys(r, vae_feature_names)
-        mm = _missing_keys(r, PIPELINE.moe.FEATURE_COLUMNS)
+        mm = _missing_keys(r, MOE_FEATURE_NAMES)
         if mv:
             vae_missing[i] = mv[:10]
         if mm:

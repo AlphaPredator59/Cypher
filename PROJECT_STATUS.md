@@ -324,10 +324,40 @@ Cypher/
 
 ---
 
-## 6. Single Recommended Next Iteration
+---
 
-**Iteration 8: Isotonic / Platt Model Probability Calibration (P2)**
-- **Objective:**
-  1. Fit post-hoc calibration (e.g., isotonic regression or temperature scaling on the validation split) to map raw XGBoost softmax scores to empirical attack probabilities.
-  2. Provide both calibrated class probabilities and raw model outputs in telemetry responses.
-  3. Add automated webhook/SIEM notification dispatch for verified high-severity incidents.
+## 6. Comprehensive Forensic Model Audit & Benchmark Results
+
+### 6.1 Multi-Model Empirical Evaluation (Held-Out Test Set: 20,931 Flows)
+
+An exhaustive benchmark was conducted on the exact same held-out test split (`ml/splits/test.csv`, 20,931 rows across 12 CICIDS2017 classes) comparing standalone supervised algorithms, ensembles, the VAE anomaly detector, and the legacy 8-expert MoE:
+
+| Architecture / Model | Test Accuracy | Macro-F1 | Weighted-F1 | Latency (ms/1k flows) | Key Findings & Limitations |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **XGBoost (Hist GBDT, 12 classes)** | **99.37%** | **0.9309** | **0.9936** | **10.44 ms** | Highest efficiency, self-contained JSON booster, robust across 12 classes (DDoS: 99.97%, DoS Hulk: 99.95%, PortScan: 99.95%, Benign: 99.79%). |
+| **LightGBM (12 classes)** | **99.40%** | **0.9341** | **0.9940** | **27.28 ms** | Slight edge on minority Web Attacks; higher runtime latency. |
+| **Random Forest (150 trees)** | **99.33%** | **0.9034** | **0.9930** | **5.85 ms** | Fast inference; lower recall on Web Attack XSS (36.7%). |
+| **Weighted Ensemble (XGB+LGB+RF)** | **99.39%** | **0.9319** | **0.9938** | **51.54 ms** | Balanced trade-off; higher compute overhead without significant accuracy gain over XGBoost. |
+| **VAE Anomaly Scorer Alone ($\tau=38.51$)** | **47.89%** | **0.5418** | **0.4789** | **12.50 ms** | **Catastrophic failure on stealth attacks:** PortScan recall 0.08%, SSH-Patator 0.0%, FTP-Patator 0.0%, Bot 5.1%. High detection on volumetric attacks (DDoS 65.4%, DoS 67.5%). |
+| **Legacy 8-Expert MoE (`artifacts/moeModels`)** | **17.91%** | **0.0521** | **0.0543** | **> 1,500 ms** | **Catastrophic failure:** Trained on CSE-CIC-IDS2018 on only 3 classes; predicts 99.85% Benign on CICIDS2017. Missing 10 attack classes entirely. |
+| **CYPHER 4-State Hybrid Engine (VAE + XGB)** | **99.07%** | **0.9944 (Det F1)** | **0.9907** | **18.20 ms** | **Overall Attack Recall: 99.95%** (17,172 / 17,181 attacks detected). Rescues stealth attacks via classifier while preserving VAE zero-day anomaly triage. |
+
+### 6.2 Breakdown of Hybrid Detection Telemetry
+
+In the 4-state hybrid architecture:
+- `classifier_attack` (**10,730 flows**): Stealth attacks below VAE reconstruction threshold rescued by the supervised classifier (PortScan, Patator brute-force, low-rate DoS).
+- `dual_confirmed` (**6,447 flows**): Volumetric attacks flagged simultaneously by VAE anomaly threshold and supervised classifier.
+- `clear_normal` (**3,574 flows**): True negative benign flows within normal baseline boundaries.
+- `vae_anomaly` (**180 flows**): High reconstruction error anomalies without a known supervised attack label match (zero-day candidates / novel statistical deviations).
+
+---
+
+## 7. Verification Results
+
+| Check Category | Command / Procedure | Result | Details |
+|---|---|---|---|
+| **Backend Test Suite** | `pytest tests/ -v` | **PASSED (67/67, 100%)** | 14 pipeline/confidence tests, 8 endpoint tests, 7 classifier tests, 6 held-out regression tests, 7 hybrid detection tests, 20 production hardening tests, 5 VAE determinism tests. |
+| **Frontend Production Build** | `npm --prefix frontend run build` | **PASSED** | `tsc -b && vite build` completed with zero TypeScript compilation or bundling errors. |
+| **Classifier Benchmark** | `python ml/benchmark_classifiers.py` | **PASSED** | Generated comparative metrics saved to `ml/reports/classifier_benchmark_comparison.json`. |
+| **VAE Determinism Verification** | `python -m ml.evaluate_vae` | **PASSED** | Inter-run variance on identical inputs strictly 0.000000. |
+

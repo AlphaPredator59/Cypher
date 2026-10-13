@@ -395,5 +395,24 @@ Full formal evaluation report available in [LEAKAGE_RESISTANT_EVALUATION.md](fil
 - **Automated Regression Suite:** **72 / 72 tests passed** (including 5 new leakage-resistant automated tests).
 - **Frontend Production Build:** Successful (`tsc -b && vite build` in 1.60s).
 
+---
+
+## 10. Independent Dataset Generalization & Alert-Policy Analysis Milestone
+
+Full formal evaluation report available in [INDEPENDENT_EVALUATION_AND_ALERT_POLICY_REPORT.md](file:///c:/Users/msi/Projects/Cypher/INDEPENDENT_EVALUATION_AND_ALERT_POLICY_REPORT.md).
+
+### 10.1 Key Findings & Operational Trade-offs
+- **External Dataset Feasibility Audit:** External intrusion datasets (NSL-KDD, UNSW-NB15) share fewer than 5 features with NetFlow/CICFlowMeter; cross-evaluation is impossible without fabricating 73+ missing features.
+- **Cross-Day Capture Generalization:** Evaluated against 10,000 completely unseen flows from Monday's independent capture (`Monday-WorkingHours.pcap_ISCX.csv`). The model achieved a **0.15% False Positive Rate** (99.85% true negative rate), proving robust benign generalization across completely separate recording sessions.
+- **Classifier-Only vs Hybrid Alert-Policy Analysis:**
+  - **Attack Recall Parity:** Both policies achieved **99.98% binary attack recall** (16,464 / 16,467 attack flows detected on test split). The unsupervised VAE detected **0 additional known attacks** over the classifier.
+  - **Operational False Alarms:** Classifier-Only generated **0.03% FPR** (1 FP in 3,772 benign flows; Binary Precision: 99.99%), whereas Hybrid generated **5.38% FPR** (203 FP in 3,772 benign flows; Binary Precision: 98.78%).
+  - **SOC Volume Impact:** In a network processing 1,000,000 normal flows/day, Hybrid generates ~53,800 false alarms/day vs ~300 false alarms/day for Classifier-Only (a **179-fold increase in operator fatigue**).
+  - **True Role of the VAE:** The VAE is an **unsupervised zero-day / novel deviation detector** (`vae_anomaly`), not a known-signature recall booster.
+- **Web Attack Hierarchical Trade-off:** Grouping `Web Attack XSS` and `Brute Force` achieves **99.38% recall** and **99.69% precision** (F1: **0.9953**), increasing overall hierarchical accuracy to **99.85%**. Subtype confusion is an inherent limitation of layer-4 flow statistics lacking HTTP payload inspection.
+- **Automated Regression Suite:** **75 / 75 tests passed** (including 3 new alert-policy and cross-day tests).
+- **Frontend Production Build:** Successful (`tsc -b && vite build` in 1.60s).
+
+
 
 

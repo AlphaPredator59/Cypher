@@ -159,6 +159,7 @@ def _extract_flow_persistence_dict(r: Dict[str, Any], row: Dict[str, Any]) -> Di
         "verdict": r.get("verdict"),
         "verdict_confidence": r.get("verdict_confidence"),
         "detection_source": r.get("detection_source"),
+        "alert_type": r.get("alert_type"),
     }
 
 
@@ -215,6 +216,7 @@ def predict_one(req: RowIn):
         "verdict": result0.get("verdict"),
         "verdict_confidence": result0.get("verdict_confidence"),
         "detection_source": result0.get("detection_source"),
+        "alert_type": result0.get("alert_type"),
         "top_contributors": result0["top_contributors"],
         "input_issues": out.get("input_issues", {})
     }
@@ -235,6 +237,7 @@ def predict_attack_type(req: RowIn):
         "verdict": r.get("verdict"),
         "verdict_confidence": r.get("verdict_confidence"),
         "detection_source": r.get("detection_source"),
+        "alert_type": r.get("alert_type"),
     }
 
 
@@ -251,6 +254,7 @@ def get_anomaly_flag(req: RowIn):
         "threshold": r["threshold"],
         "anomaly_confidence": r.get("anomaly_confidence"),
         "detection_source": r.get("detection_source"),
+        "alert_type": r.get("alert_type"),
     }
 
 
@@ -277,6 +281,7 @@ def analyze(req: RowIn):
         "verdict": r.get("verdict"),
         "verdict_confidence": r.get("verdict_confidence"),
         "detection_source": r.get("detection_source"),
+        "alert_type": r.get("alert_type"),
         "top_contributors": r["top_contributors"],
         "input_issues": out.get("input_issues", {}),
     }
@@ -400,6 +405,7 @@ def get_audit_logs(
     limit: int = Query(50, ge=1, le=500),
     anomaly_only: bool = Query(False),
     detection_source: Optional[str] = Query(None),
+    alert_type: Optional[str] = Query(None),
     ip: Optional[str] = Query(None)
 ):
     try:
@@ -410,7 +416,8 @@ def get_audit_logs(
             flows = database.query_recent_flows(
                 limit=limit,
                 anomaly_only=anomaly_only,
-                detection_source=detection_source
+                detection_source=detection_source,
+                alert_type=alert_type
             )
         stats = database.get_flow_stats()
         return {

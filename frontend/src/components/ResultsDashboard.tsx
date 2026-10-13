@@ -21,24 +21,24 @@ interface ResultsDashboardProps {
 }
 
 function renderTriggerBadge(src?: string | null) {
-  if (src === "dual_confirmed") {
+  if (src === "dual_confirmed" || src === "dual_signal") {
     return (
-      <span className="trigger-pill trigger-dual" title="Dual Confirmed: Exceeds VAE threshold & flagged by classifier">
-        Dual Confirmed
+      <span className="trigger-pill trigger-dual" title="Dual Signal: Exceeds VAE reconstruction threshold & corroborated by supervised classifier as known attack">
+        Dual Signal
       </span>
     );
   }
-  if (src === "classifier_attack") {
+  if (src === "classifier_attack" || src === "known_attack") {
     return (
-      <span className="trigger-pill trigger-clf" title="Classifier Detected: Known attack identified below VAE threshold (Stealth flow)">
-        Classifier Attack
+      <span className="trigger-pill trigger-clf" title="Known Attack: Supervised classifier identified known attack family">
+        Known Attack
       </span>
     );
   }
-  if (src === "vae_anomaly") {
+  if (src === "vae_anomaly" || src === "anomaly_candidate") {
     return (
-      <span className="trigger-pill trigger-vae" title="VAE Anomaly: Exceeds VAE reconstruction threshold (Unclassified / Novel)">
-        VAE Anomaly
+      <span className="trigger-pill trigger-vae" title="Anomaly Candidate: Statistical outlier exceeding VAE threshold (Classifier normal/unclassified)">
+        Anomaly Candidate
       </span>
     );
   }
@@ -253,7 +253,7 @@ export function ResultsDashboard({ data, onSelectFlow }: ResultsDashboardProps) 
                     <span className={`status-pill ${f.is_anomaly ? "pill-danger" : "pill-success"}`}>
                       {f.is_anomaly ? "ANOMALY" : "CLEAR"}
                     </span>
-                    {renderTriggerBadge(f.detection_source)}
+                    {renderTriggerBadge(f.alert_type ?? f.detection_source)}
                   </td>
                   <td>
                     <strong>{f.verdict ?? (f.is_anomaly ? "Anomalous — Attack Type Unclassified" : "Normal Traffic")}</strong>

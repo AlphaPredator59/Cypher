@@ -83,15 +83,15 @@ export function FlowDetailDrawer({ flow, onClose, apiBase }: FlowDetailDrawerPro
                     ? `${formatProbability(flow.attack_confidence)} (Model Output)`
                     : "—"}
                 </strong>{" "}
-                | Trigger:{" "}
+                | Alert Signal:{" "}
                 <strong>
-                  {flow.detection_source === "dual_confirmed"
-                    ? "Dual Confirmed"
-                    : flow.detection_source === "classifier_attack"
-                    ? "Classifier (Stealth)"
-                    : flow.detection_source === "vae_anomaly"
-                    ? "VAE (Novel/Unknown)"
-                    : "Clear Normal"}
+                  {(flow.alert_type === "dual_signal" || flow.detection_source === "dual_confirmed")
+                    ? "Dual Signal"
+                    : (flow.alert_type === "known_attack" || flow.detection_source === "classifier_attack")
+                    ? "Known Attack"
+                    : (flow.alert_type === "anomaly_candidate" || flow.detection_source === "vae_anomaly")
+                    ? "Anomaly Candidate"
+                    : "Normal Traffic"}
                 </strong>{" "}
                 | VAE Score: <strong>{formatNumber(flow.score, 2)}</strong> (Threshold:{" "}
                 {formatNumber(flow.threshold, 2)})
@@ -189,24 +189,24 @@ export function FlowDetailDrawer({ flow, onClose, apiBase }: FlowDetailDrawerPro
                   <div
                     className="detail-item"
                     title={
-                      flow.detection_source === "dual_confirmed"
-                        ? "Dual Confirmed: Exceeds VAE threshold & flagged by supervised classifier"
-                        : flow.detection_source === "classifier_attack"
-                        ? "Classifier Attack: Detected by supervised classifier below VAE threshold (Stealth flow)"
-                        : flow.detection_source === "vae_anomaly"
-                        ? "VAE Anomaly: Exceeds VAE reconstruction threshold (Unclassified / Novel)"
-                        : "Clear Normal: Below VAE threshold and classified as benign"
+                      (flow.alert_type === "dual_signal" || flow.detection_source === "dual_confirmed")
+                        ? "Dual Signal: Exceeds VAE threshold & flagged by supervised classifier as known attack"
+                        : (flow.alert_type === "known_attack" || flow.detection_source === "classifier_attack")
+                        ? "Known Attack: Identified by supervised classifier within normal VAE bounds"
+                        : (flow.alert_type === "anomaly_candidate" || flow.detection_source === "vae_anomaly")
+                        ? "Anomaly Candidate: Statistical outlier exceeding VAE threshold (Classifier normal/unclassified)"
+                        : "Normal Traffic: Within VAE baseline and classified as benign"
                     }
                   >
-                    <span>Detection Trigger</span>
-                    <strong className={flow.detection_source === "dual_confirmed" ? "text-danger" : flow.detection_source === "classifier_attack" ? "text-amber" : flow.detection_source === "vae_anomaly" ? "text-cyan" : "text-success"}>
-                      {flow.detection_source === "dual_confirmed"
-                        ? "Dual Confirmed"
-                        : flow.detection_source === "classifier_attack"
-                        ? "Classifier (Stealth)"
-                        : flow.detection_source === "vae_anomaly"
-                        ? "VAE (Novel/Unknown)"
-                        : "Clear Normal"}
+                    <span>Alert Signal</span>
+                    <strong className={(flow.alert_type === "dual_signal" || flow.detection_source === "dual_confirmed") ? "text-danger" : (flow.alert_type === "known_attack" || flow.detection_source === "classifier_attack") ? "text-amber" : (flow.alert_type === "anomaly_candidate" || flow.detection_source === "vae_anomaly") ? "text-cyan" : "text-success"}>
+                      {(flow.alert_type === "dual_signal" || flow.detection_source === "dual_confirmed")
+                        ? "Dual Signal"
+                        : (flow.alert_type === "known_attack" || flow.detection_source === "classifier_attack")
+                        ? "Known Attack"
+                        : (flow.alert_type === "anomaly_candidate" || flow.detection_source === "vae_anomaly")
+                        ? "Anomaly Candidate"
+                        : "Normal Traffic"}
                     </strong>
                   </div>
                   <div className="detail-item">

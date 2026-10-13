@@ -1,9 +1,9 @@
 # CYPHER Intrusion Detection System — Project Status
 
 **Living Architecture & Codebase Status**  
-**Current Iteration Completed:** Iteration 7 (Classifier Confidence Saturation & Display Correction)  
-**Date:** October 12, 2026  
-**Status:** Calibrated Hybrid Detection Engine, Truthful Metric Presentation & Persistent Store
+**Current Iteration Completed:** Milestone 8 (Detection Quality Verification & Separate Anomaly Alerts)  
+**Date:** October 13, 2026  
+**Status:** Decoupled 4-State Alert Architecture, 0.00% Zero-Duplicate Benchmark, 81/81 Passing Tests
 
 ---
 
@@ -397,22 +397,34 @@ Full formal evaluation report available in [LEAKAGE_RESISTANT_EVALUATION.md](fil
 
 ---
 
-## 10. Independent Dataset Generalization & Alert-Policy Analysis Milestone
+---
 
-Full formal evaluation report available in [INDEPENDENT_EVALUATION_AND_ALERT_POLICY_REPORT.md](file:///c:/Users/msi/Projects/Cypher/INDEPENDENT_EVALUATION_AND_ALERT_POLICY_REPORT.md).
+## 11. Detection Quality Verification & Separate Anomaly Alerts Milestone
 
-### 10.1 Key Findings & Operational Trade-offs
-- **External Dataset Feasibility Audit:** External intrusion datasets (NSL-KDD, UNSW-NB15) share fewer than 5 features with NetFlow/CICFlowMeter; cross-evaluation is impossible without fabricating 73+ missing features.
-- **Cross-Day Capture Generalization:** Evaluated against 10,000 completely unseen flows from Monday's independent capture (`Monday-WorkingHours.pcap_ISCX.csv`). The model achieved a **0.15% False Positive Rate** (99.85% true negative rate), proving robust benign generalization across completely separate recording sessions.
-- **Classifier-Only vs Hybrid Alert-Policy Analysis:**
-  - **Attack Recall Parity:** Both policies achieved **99.98% binary attack recall** (16,464 / 16,467 attack flows detected on test split). The unsupervised VAE detected **0 additional known attacks** over the classifier.
-  - **Operational False Alarms:** Classifier-Only generated **0.03% FPR** (1 FP in 3,772 benign flows; Binary Precision: 99.99%), whereas Hybrid generated **5.38% FPR** (203 FP in 3,772 benign flows; Binary Precision: 98.78%).
-  - **SOC Volume Impact:** In a network processing 1,000,000 normal flows/day, Hybrid generates ~53,800 false alarms/day vs ~300 false alarms/day for Classifier-Only (a **179-fold increase in operator fatigue**).
-  - **True Role of the VAE:** The VAE is an **unsupervised zero-day / novel deviation detector** (`vae_anomaly`), not a known-signature recall booster.
-- **Web Attack Hierarchical Trade-off:** Grouping `Web Attack XSS` and `Brute Force` achieves **99.38% recall** and **99.69% precision** (F1: **0.9953**), increasing overall hierarchical accuracy to **99.85%**. Subtype confusion is an inherent limitation of layer-4 flow statistics lacking HTTP payload inspection.
-- **Automated Regression Suite:** **75 / 75 tests passed** (including 3 new alert-policy and cross-day tests).
-- **Frontend Production Build:** Successful (`tsc -b && vite build` in 1.60s).
+Full formal evaluation report available in [LEAKAGE_RESISTANT_EVALUATION.md](file:///c:/Users/msi/Projects/Cypher/LEAKAGE_RESISTANT_EVALUATION.md).
 
-
-
-
+### 11.1 Key Achievements & Empirical Findings
+- **Reproduction of Current Evaluation:**
+  - Evaluated on the held-out zero-duplicate test set (`ml/splits_leakage_resistant/test.csv`, 20,239 flows: 16,467 Attack, 3,772 Benign).
+  - Multi-class test accuracy: **99.39%**, Macro-F1: **0.9268**, Weighted-F1: **0.9933**.
+  - Binary Classifier-Only: TP = **16,464**, FP = **1**, TN = **3,771**, FN = **3**. Attack Recall: **99.98%**, FPR: **0.03%**, Precision: **99.99%**, Binary Accuracy: **99.98%**.
+  - All denominators, confusion matrices, and per-class supports independently verified.
+- **Decision Rule Consistency:**
+  - Audited decision rules between argmax and thresholded confidence ($P_{\text{xgb}} \ge 0.50$). Exactly 3 flows out of 20,239 differed because model probability was split between `Web Attack XSS` (~49.9%) and `Web Attack Brute Force` (~49.8%), with combined non-benign probability $> 99.7%$.
+- **Alert Architecture Decoupling & VAE Reality:**
+  - On the held-out test set, VAE-only detection ($\tau = 38.51$) achieves only **3.39% attack recall** and detected **0 additional known attacks** that the supervised classifier missed.
+  - Forcing an OR-based hybrid policy adds **202 false alarms** from benign flows with normal variance above $\tau$, jumping the False Positive Rate from **0.03%** to **5.38%** (a 179-fold increase).
+  - **Decoupled 4-State Alert Semantics:**
+    1. **`dual_signal`:** Both VAE anomaly and supervised classifier confirm known attack (6,361 flows).
+    2. **`known_attack`:** Supervised classifier identified known attack; VAE within baseline (10,103 flows).
+    3. **`anomaly_candidate`:** VAE reconstruction outlier; classifier predicts normal (BENIGN) (202 flows). Flagged for secondary operator triage, **not** promoted into a confirmed high-severity attack.
+    4. **`normal_traffic`:** Within baseline and classified as BENIGN (3,569 flows).
+  - Exposed `alert_type` across database schema (`FlowAuditRecord`), API endpoints (`/predict`, `/analyze-batch`, `/audit-logs`), and frontend UI console.
+- **Hierarchical Web Attack Validation:**
+  - Symmetrical aggregation to `Web Attack` achieves **99.38% recall** (320 / 322 flows) and **99.69% precision** (F1: **0.9953**).
+  - Explicitly documented that network layer-4 statistical summaries cannot perform application payload-level XSS vs Brute Force discrimination; Deep Packet Inspection (DPI) is required for payload inspection.
+- **Generalization Caveat:**
+  - Duplicate-resistant evaluation eliminates literal feature vector memorization, but does not prove independent-session or real-world generalization due to testbed dataset origin and lack of session IDs, timestamps, and IP addresses.
+- **Verification Suite:**
+  - **81 / 81 backend tests passed** (`pytest tests/ -v` in 12.13s), including 6 new tests in `tests/test_alert_architecture.py`.
+  - **Frontend production build succeeded** (`npm --prefix frontend run build` in 1.69s).

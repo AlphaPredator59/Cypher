@@ -15,6 +15,7 @@ export type ModelResult = {
   verdict?: string | null;
   verdict_confidence?: number | null;
   detection_source?: string | null;
+  alert_type?: string | null;
   top_contributors?: TopContributor[];
   input_issues?: Record<string, unknown>;
 };
@@ -42,6 +43,7 @@ export type TrafficFlowRecord = {
   verdict?: string;
   verdict_confidence?: number | null;
   detection_source?: string | null;
+  alert_type?: string | null;
   top_contributors?: TopContributor[];
   raw_features?: Record<string, number | string>;
 };

@@ -10,7 +10,7 @@ from contextlib import contextmanager
 from datetime import datetime, timezone
 from typing import Any, Dict, Generator, List, Optional
 
-from sqlalchemy import Boolean, DateTime, Float, Index, Integer, String, create_engine, select, func
+from sqlalchemy import Boolean, DateTime, Float, Index, Integer, String, create_engine, select, func, text
 from sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column, sessionmaker
 
 # Database configuration: defaults to artifacts/cypher.db or CYPHER_DB_PATH / CYPHER_DATABASE_URL
@@ -69,6 +69,7 @@ class FlowAuditRecord(Base):
     verdict: Mapped[Optional[str]] = mapped_column(String(128), nullable=True)
     verdict_confidence: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
     detection_source: Mapped[Optional[str]] = mapped_column(String(32), nullable=True, index=True)
+    alert_type: Mapped[Optional[str]] = mapped_column(String(32), nullable=True, index=True)
 
     __table_args__ = (
         Index("ix_flow_src_dst_ip", "src_ip", "dst_ip"),
@@ -94,13 +95,36 @@ class FlowAuditRecord(Base):
             "verdict": self.verdict,
             "verdict_confidence": self.verdict_confidence,
             "detection_source": self.detection_source,
+            "alert_type": self.alert_type or _infer_alert_type(self.detection_source),
         }
 
 
+def _infer_alert_type(src: Optional[str]) -> Optional[str]:
+    if not src:
+        return None
+    mapping = {
+        "dual_confirmed": "dual_signal",
+        "classifier_attack": "known_attack",
+        "vae_anomaly": "anomaly_candidate",
+        "clear_normal": "normal_traffic",
+    }
+    return mapping.get(src, src)
+
+
 def init_db(target_engine=None) -> None:
-    """Creates database tables if they do not exist."""
+    """Creates database tables if they do not exist and applies migrations."""
     e = target_engine or engine
     Base.metadata.create_all(bind=e)
+    # Lightweight schema migration for SQLite: ensure alert_type column exists
+    try:
+        with e.connect() as conn:
+            res = conn.execute(text("PRAGMA table_info(flow_audit_records)"))
+            cols = [row[1] for row in res.fetchall()]
+            if cols and "alert_type" not in cols:
+                conn.execute(text("ALTER TABLE flow_audit_records ADD COLUMN alert_type VARCHAR(32)"))
+                conn.commit()
+    except Exception:
+        pass
 
 
 @contextmanager
@@ -122,6 +146,8 @@ def save_flow_record(flow_data: Dict[str, Any], db: Optional[Session] = None) ->
     """
     Persists a single flow inspection record to the database.
     """
+    det_src = flow_data.get("detection_source")
+    alt_type = flow_data.get("alert_type") or _infer_alert_type(det_src)
     record = FlowAuditRecord(
         flow_id=str(flow_data.get("flow_id") or flow_data.get("row_index") or ""),
         src_ip=flow_data.get("src_ip"),
@@ -138,7 +164,8 @@ def save_flow_record(flow_data: Dict[str, Any], db: Optional[Session] = None) ->
         classification_status=flow_data.get("classification_status"),
         verdict=flow_data.get("verdict"),
         verdict_confidence=float(flow_data["verdict_confidence"]) if flow_data.get("verdict_confidence") is not None else None,
-        detection_source=flow_data.get("detection_source"),
+        detection_source=det_src,
+        alert_type=alt_type,
     )
 
     if db is not None:
@@ -181,6 +208,7 @@ def save_flow_records(flows: List[Dict[str, Any]], db: Optional[Session] = None)
             verdict=f.get("verdict"),
             verdict_confidence=float(f["verdict_confidence"]) if f.get("verdict_confidence") is not None else None,
             detection_source=f.get("detection_source"),
+            alert_type=f.get("alert_type") or _infer_alert_type(f.get("detection_source")),
         )
         for f in flows
     ]
@@ -221,16 +249,19 @@ def query_recent_flows(
     limit: int = 100,
     anomaly_only: bool = False,
     detection_source: Optional[str] = None,
+    alert_type: Optional[str] = None,
     db: Optional[Session] = None
 ) -> List[Dict[str, Any]]:
     """
-    Queries recent persisted flows with optional anomaly or detection_source filters.
+    Queries recent persisted flows with optional anomaly, detection_source, or alert_type filters.
     """
     stmt = select(FlowAuditRecord)
     if anomaly_only:
         stmt = stmt.where(FlowAuditRecord.is_anomaly.is_(True))
     if detection_source:
         stmt = stmt.where(FlowAuditRecord.detection_source == detection_source)
+    if alert_type:
+        stmt = stmt.where(FlowAuditRecord.alert_type == alert_type)
 
     stmt = stmt.order_by(FlowAuditRecord.timestamp.desc()).limit(limit)
 
@@ -243,16 +274,30 @@ def query_recent_flows(
         return [r.to_dict() for r in results]
 
 
-def get_flow_stats(db: Optional[Session] = None) -> Dict[str, int]:
+def get_flow_stats(db: Optional[Session] = None) -> Dict[str, Any]:
     """
-    Returns aggregate counts of total, anomalous, and benign persisted flows.
+    Returns aggregate counts of total, anomalous, and benign persisted flows,
+    along with breakdown by alert_type.
     """
-    if db is not None:
-        total = db.scalar(select(func.count(FlowAuditRecord.id))) or 0
-        anomalies = db.scalar(select(func.count(FlowAuditRecord.id)).where(FlowAuditRecord.is_anomaly.is_(True))) or 0
-        return {"total": total, "anomalous": anomalies, "benign": total - anomalies}
-
-    with get_db_session() as session:
+    def _compute(session):
         total = session.scalar(select(func.count(FlowAuditRecord.id))) or 0
         anomalies = session.scalar(select(func.count(FlowAuditRecord.id)).where(FlowAuditRecord.is_anomaly.is_(True))) or 0
-        return {"total": total, "anomalous": anomalies, "benign": total - anomalies}
+        known_attacks = session.scalar(select(func.count(FlowAuditRecord.id)).where(FlowAuditRecord.alert_type == "known_attack")) or 0
+        dual_signals = session.scalar(select(func.count(FlowAuditRecord.id)).where(FlowAuditRecord.alert_type == "dual_signal")) or 0
+        anomaly_candidates = session.scalar(select(func.count(FlowAuditRecord.id)).where(FlowAuditRecord.alert_type == "anomaly_candidate")) or 0
+        normal_count = session.scalar(select(func.count(FlowAuditRecord.id)).where(FlowAuditRecord.alert_type == "normal_traffic")) or (total - anomalies)
+        return {
+            "total": total,
+            "anomalous": anomalies,
+            "benign": total - anomalies,
+            "known_attacks": known_attacks,
+            "dual_signals": dual_signals,
+            "anomaly_candidates": anomaly_candidates,
+            "normal_traffic": normal_count,
+        }
+
+    if db is not None:
+        return _compute(db)
+
+    with get_db_session() as session:
+        return _compute(session)

@@ -386,24 +386,27 @@ class ThreatPipeline:
                 and atk_c >= self.attack_confidence_threshold
             )
 
-            # Explicit 4-state Hybrid Decision Policy:
+            # Explicit 4-state Alert & Detection Architecture:
             if vae_anomaly and clf_attack:
-                # 1. Dual confirmed attack (both VAE anomaly and supervised attack)
+                # 1. Dual Signal: Both VAE anomaly and supervised attack confirmed
                 is_anom = True
+                alert_type = "dual_signal"
                 detection_source = "dual_confirmed"
                 verdict = f"Anomalous — {pred_lbl}"
                 atk_lbl = pred_lbl
                 verdict_conf = round(atk_c, 6)
             elif not vae_anomaly and clf_attack:
-                # 2. Classifier-detected known attack (rescued stealth attack below VAE threshold)
+                # 2. Known Attack: Classifier detected known attack family (VAE within normal baseline)
                 is_anom = True
+                alert_type = "known_attack"
                 detection_source = "classifier_attack"
                 verdict = f"Anomalous — {pred_lbl}"
                 atk_lbl = pred_lbl
                 verdict_conf = round(atk_c, 6)
             elif vae_anomaly and not clf_attack:
-                # 3. VAE-only anomaly (unclassified novel anomaly / zero-day candidate / BENIGN classifier disagreement)
+                # 3. Anomaly Candidate: VAE outlier without classifier attack confirmation (unclassified / zero-day candidate)
                 is_anom = True
+                alert_type = "anomaly_candidate"
                 detection_source = "vae_anomaly"
                 if class_status == "Failed":
                     verdict = "Classification Failed"
@@ -414,8 +417,9 @@ class ThreatPipeline:
                 atk_c = None  # Do not present sub-threshold or benign probability as attack confidence
                 verdict_conf = round(anom_conf, 4)
             else:
-                # 4. Clean normal traffic (within normal VAE baseline, classifier does not detect attack)
+                # 4. Normal Traffic: Clean traffic within VAE baseline, classifier does not detect attack
                 is_anom = False
+                alert_type = "normal_traffic"
                 detection_source = "clear_normal"
                 verdict = "Normal Traffic"
                 atk_lbl = "Normal Traffic" if class_status == "Evaluated" else "Classification Failed"
@@ -434,6 +438,7 @@ class ThreatPipeline:
                 "verdict": verdict,
                 "verdict_confidence": verdict_conf,
                 "detection_source": detection_source,
+                "alert_type": alert_type,
                 "top_contributors": contrib,
             })
 

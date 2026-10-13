@@ -104,40 +104,40 @@ export function MetricReadout({ result, onOpenDetails }: MetricReadoutProps) {
         </div>
       )}
 
-      {/* Classifier-Only Stealth Attack Banner */}
-      {result.detection_source === "classifier_attack" && (
+      {/* Known Attack Banner */}
+      {(result.alert_type === "known_attack" || result.detection_source === "classifier_attack") && (
         <div className="disagreement-banner" style={{ borderColor: "rgba(251, 191, 36, 0.4)", background: "rgba(251, 191, 36, 0.08)" }}>
           <AlertTriangle size={20} className="text-amber" />
           <div>
-            <strong>Stealth Attack Detected by Classifier:</strong>
+            <strong>Known Attack Detected by Classifier:</strong>
             <p>
-              Reconstruction error ({formatNumber(score, 3)}) is below the VAE baseline threshold ({formatNumber(threshold, 3)}), but the supervised 12-class classifier identified signature characteristics of {attackClassDisplay} with {formatProbability(result.attack_confidence)} classifier probability.
+              The supervised 12-class classifier identified signature characteristics of {attackClassDisplay} with {formatProbability(result.attack_confidence)} probability. VAE reconstruction error ({formatNumber(score, 3)}) resides within the normal baseline threshold ({formatNumber(threshold, 3)}).
             </p>
           </div>
         </div>
       )}
 
-      {/* Dual Confirmed Threat Banner */}
-      {result.detection_source === "dual_confirmed" && (
+      {/* Dual Confirmed / Dual Signal Threat Banner */}
+      {(result.alert_type === "dual_signal" || result.detection_source === "dual_confirmed") && (
         <div className="disagreement-banner" style={{ borderColor: "rgba(239, 68, 68, 0.4)", background: "rgba(239, 68, 68, 0.08)" }}>
           <ShieldAlert size={20} className="text-danger" />
           <div>
-            <strong>Dual-Confirmed Threat Detected:</strong>
+            <strong>Dual Signal Threat Detected:</strong>
             <p>
-              Both unsupervised VAE reconstruction error ({formatNumber(score, 3)} &gt; {formatNumber(threshold, 3)}) and supervised attack classification ({attackClassDisplay}) independently confirmed malicious activity.
+              Both unsupervised VAE reconstruction error ({formatNumber(score, 3)} &gt; {formatNumber(threshold, 3)}) and supervised attack classification ({attackClassDisplay}) independently corroborated this flow as malicious.
             </p>
           </div>
         </div>
       )}
 
-      {/* Unclassified Novel Anomaly Banner */}
-      {(result.detection_source === "vae_anomaly" || (isUnclassified && !isFailed && result.detection_source !== "classifier_attack")) && (
+      {/* Statistical Anomaly Candidate Banner */}
+      {((result.alert_type === "anomaly_candidate" || result.detection_source === "vae_anomaly") || (isUnclassified && !isFailed && result.alert_type !== "known_attack" && result.detection_source !== "classifier_attack")) && (
         <div className="disagreement-banner">
           <AlertTriangle size={20} className="text-amber" />
           <div>
-            <strong>Unclassified Anomalous Traffic Detected:</strong>
+            <strong>Statistical Anomaly Candidate (Unclassified):</strong>
             <p>
-              Reconstruction error ({formatNumber(score, 3)}) exceeds threshold ({formatNumber(threshold, 3)}), confirming anomalous behavior. The supervised classifier did not attribute this flow to a known attack class, indicating potential novel/zero-day activity or benign classifier disagreement.
+              Reconstruction error ({formatNumber(score, 3)}) exceeds threshold ({formatNumber(threshold, 3)}), marking this flow as a statistical outlier. The supervised classifier classified this flow as normal (BENIGN). This event is flagged as an anomaly candidate for secondary triage, not an automatically confirmed attack.
             </p>
           </div>
         </div>
@@ -156,25 +156,25 @@ export function MetricReadout({ result, onOpenDetails }: MetricReadoutProps) {
         <article
           className="metric-tile"
           title={
-            result.detection_source === "dual_confirmed"
-              ? "Dual Confirmed: Exceeds VAE threshold & flagged by supervised classifier"
-              : result.detection_source === "classifier_attack"
-              ? "Classifier Attack: Detected by supervised classifier below VAE threshold (Stealth flow)"
-              : result.detection_source === "vae_anomaly"
-              ? "VAE Anomaly: Exceeds VAE reconstruction threshold (Unclassified / Novel)"
-              : "Clear Normal: Below VAE threshold and classified as benign"
+            (result.alert_type === "dual_signal" || result.detection_source === "dual_confirmed")
+              ? "Dual Signal: Exceeds VAE threshold & flagged by supervised classifier as known attack"
+              : (result.alert_type === "known_attack" || result.detection_source === "classifier_attack")
+              ? "Known Attack: Identified by supervised classifier within normal VAE bounds"
+              : (result.alert_type === "anomaly_candidate" || result.detection_source === "vae_anomaly")
+              ? "Anomaly Candidate: Statistical outlier exceeding VAE threshold (Classifier normal/unclassified)"
+              : "Normal Traffic: Within VAE baseline and classified as benign"
           }
         >
-          <Crosshair size={22} className={result.detection_source === "dual_confirmed" ? "text-danger" : result.detection_source === "classifier_attack" ? "text-amber" : result.detection_source === "vae_anomaly" ? "text-cyan" : "text-success"} />
-          <span>Detection Trigger</span>
-          <strong className={`text-sm-break ${result.detection_source === "dual_confirmed" ? "text-danger" : result.detection_source === "classifier_attack" ? "text-amber" : result.detection_source === "vae_anomaly" ? "text-cyan" : "text-success"}`}>
-            {result.detection_source === "dual_confirmed"
-              ? "Dual Confirmed"
-              : result.detection_source === "classifier_attack"
-              ? "Classifier (Stealth)"
-              : result.detection_source === "vae_anomaly"
-              ? "VAE (Novel/Unknown)"
-              : "Clear Normal"}
+          <Crosshair size={22} className={(result.alert_type === "dual_signal" || result.detection_source === "dual_confirmed") ? "text-danger" : (result.alert_type === "known_attack" || result.detection_source === "classifier_attack") ? "text-amber" : (result.alert_type === "anomaly_candidate" || result.detection_source === "vae_anomaly") ? "text-cyan" : "text-success"} />
+          <span>Alert Signal</span>
+          <strong className={`text-sm-break ${(result.alert_type === "dual_signal" || result.detection_source === "dual_confirmed") ? "text-danger" : (result.alert_type === "known_attack" || result.detection_source === "classifier_attack") ? "text-amber" : (result.alert_type === "anomaly_candidate" || result.detection_source === "vae_anomaly") ? "text-cyan" : "text-success"}`}>
+            {(result.alert_type === "dual_signal" || result.detection_source === "dual_confirmed")
+              ? "Dual Signal"
+              : (result.alert_type === "known_attack" || result.detection_source === "classifier_attack")
+              ? "Known Attack"
+              : (result.alert_type === "anomaly_candidate" || result.detection_source === "vae_anomaly")
+              ? "Anomaly Candidate"
+              : "Normal Traffic"}
           </strong>
         </article>
 
